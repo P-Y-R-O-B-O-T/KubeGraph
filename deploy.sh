@@ -1,5 +1,7 @@
 #!/bin/bash
 
 cd cluster-state
+sudo docker build --progress=plain --no-cache -t kubegraph-cluster-state:latest .
+cd ..
 
-sudo docker build --progress=plain -t kubegraph-cluster-state:latest .
+sudo docker compose up -d

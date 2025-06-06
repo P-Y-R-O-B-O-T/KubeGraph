@@ -1,0 +1,16 @@
+services:
+  cluster-state:
+    image: kubegraph-cluster-state:latest
+    container_name: cluster-state
+    volumes:
+      - kubeconfig:/kubeconf
+    restart: unless-stopped
+    networks:
+      - cluster-state
+
+networks:
+  cluster-state:
+
+volumes:
+  kubeconfig:
+    driver: local
