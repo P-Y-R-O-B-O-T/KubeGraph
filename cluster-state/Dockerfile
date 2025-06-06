@@ -2,6 +2,8 @@ FROM python:3.12.10-slim-bookworm
 
 RUN mkdir /apps
 
+RUN mkdir /kubeconf
+
 WORKDIR /apps
 
 RUN apt update
