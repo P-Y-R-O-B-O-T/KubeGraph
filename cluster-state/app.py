@@ -41,11 +41,10 @@ class APP:
         }
 
     async def run(self) -> None:
-        await asyncio.gather(
-            *[self.STATE_OBJECTS[_].run() for _ in self.STATE_OBJECTS]
-        )
+        await asyncio.gather(*[self.STATE_OBJECTS[_].run() for _ in self.STATE_OBJECTS])
 
 
 if __name__ == "__main__":
+    print("Starting app")
     APPLICATION = APP()
     asyncio.run(APPLICATION.run())

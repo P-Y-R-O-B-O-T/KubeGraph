@@ -4,6 +4,8 @@ RUN mkdir /apps
 
 RUN mkdir /kubeconf
 
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /apps
 
 RUN apt update
@@ -16,4 +18,4 @@ RUN pip3 install -r requirements.txt --break-system-packages
 
 RUN tree
 
-CMD ["python3", "app.py"]
+ENTRYPOINT ["python3", "app.py"]

@@ -4,6 +4,7 @@ import asyncio
 import os
 import sys
 import time
+from datetime import datetime
 
 import constants.constants as CONSTANTS
 import kubeconfig_utils.utils as KUBECONFIG_UTILS
@@ -11,13 +12,18 @@ import kubeconfig_utils.utils as KUBECONFIG_UTILS
 
 class BASE_RUNNER:
     def __init__(self, api_object_class, name: str) -> None:
-        self.RICH_CONSOLE = Console()
+        self.RICH_CONSOLE = Console(
+            force_terminal=True,
+            color_system="truecolor",
+            log_path=False,
+            safe_box=False,
+        )
 
         self.API_OBJECT_CLASS = api_object_class
         self.NAME = name
 
     def load_clients(self) -> None:
-        print(f"Loading files {self.NAME}")
+        self.RICH_CONSOLE.print(f"Loading files {self.NAME}")
         self.API_CLIENTS = {}
         self.FILES = os.listdir(CONSTANTS.KUBECONF_PATH)
 
@@ -41,27 +47,34 @@ class BASE_RUNNER:
 
         for _ in to_be_removed:
             self.FILES.remove(_)
-        print(f"Loaded files {self.NAME}")
+        self.RICH_CONSOLE.print(f"Loaded files {self.NAME}")
 
     async def run(self) -> None:
         while True:
             self.load_clients()
+            await asyncio.sleep(2)
 
             while True:
 
                 for _ in self.CLIENTS:
                     DATA = {}
 
-                    print(f"Fetching {_} {self.NAME}")
+                    self.RICH_CONSOLE.log(
+                        f"[khaki1]Fetching[/ khaki1] [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+                    )
                     start_time = time.time()
                     try:
                         # fetched = await asyncio.to_thread(self.fetch_state, _)
                         fetched = self.fetch_state(_)
                         self.structure_data(DATA, fetched.to_dict())
 
-                        print(f"Fetched {_} {self.NAME} in {time.time() - start_time}")
+                        self.RICH_CONSOLE.log(
+                            f"[spring_green1]Fetched[/ spring_green1]  [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"
+                        )
                     except:
-                        print(f"Error fetching {_} {self.NAME}")
+                        self.RICH_CONSOLE.log(
+                            f"[deep_pink3]Error[/ deep_pink3] fetching [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+                        )
 
                 if self.need_file_reload():
                     break
@@ -73,6 +86,9 @@ class BASE_RUNNER:
 
     def need_file_reload(self) -> bool:
         return sorted(self.FILES) != sorted(os.listdir(CONSTANTS.KUBECONF_PATH))
+
+    def logtime(self) -> str:
+        return datetime.now().strftime("[ %Y-%m-%d %H:%M:%S ]")
 
     @abstractmethod
     def fetch_state(self, _):
