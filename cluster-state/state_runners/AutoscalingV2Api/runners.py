@@ -10,7 +10,7 @@ class AutoscalingV2Api_RUNNER(BASE_RUNNER):
 
 class HPA_RUNNER(AutoscalingV2Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("HPA")
+        super().__init__("AutoscalingV2Api_HPAS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_horizontal_pod_autoscaler_for_all_namespaces(

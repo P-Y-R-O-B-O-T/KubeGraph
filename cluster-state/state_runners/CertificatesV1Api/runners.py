@@ -10,7 +10,7 @@ class CertificatesV1Api_RUNNER(BASE_RUNNER):
 
 class CSR_RUNNER(CertificatesV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("CSR")
+        super().__init__("CertificatesV1Api_CSRS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_certificate_signing_request(

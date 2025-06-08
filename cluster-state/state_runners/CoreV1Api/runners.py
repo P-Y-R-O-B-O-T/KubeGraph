@@ -10,7 +10,7 @@ class CoreV1Api_RUNNER(BASE_RUNNER):
 
 class POD_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("PODS")
+        super().__init__("CoreV1Api_PODS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_pod_for_all_namespaces(
@@ -20,7 +20,7 @@ class POD_RUNNER(CoreV1Api_RUNNER):
 
 class NAMESPACE_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("NAMESPACES")
+        super().__init__("CoreV1Api_NAMESPACES")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_namespace(
@@ -30,7 +30,7 @@ class NAMESPACE_RUNNER(CoreV1Api_RUNNER):
 
 class COMPONENT_STATUS_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("COMPONENT_STATUS")
+        super().__init__("CoreV1Api_COMPONENT_STATUSES")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_component_status(
@@ -40,7 +40,7 @@ class COMPONENT_STATUS_RUNNER(CoreV1Api_RUNNER):
 
 class CONFIGMAP_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("CONFIGMAP")
+        super().__init__("CoreV1Api_CONFIGMAPS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_config_map_for_all_namespaces(
@@ -50,7 +50,7 @@ class CONFIGMAP_RUNNER(CoreV1Api_RUNNER):
 
 class ENDPOINT_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("ENDPOINTS")
+        super().__init__("CoreV1Api_ENDPOINTS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_endpoints_for_all_namespaces(
@@ -60,7 +60,7 @@ class ENDPOINT_RUNNER(CoreV1Api_RUNNER):
 
 class EVENT_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("EVENTS")
+        super().__init__("CoreV1Api_EVENTS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_event_for_all_namespaces(
@@ -70,7 +70,7 @@ class EVENT_RUNNER(CoreV1Api_RUNNER):
 
 class LIMIT_RANGE_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("LIMIT_RANGE")
+        super().__init__("CoreV1Api_LIMIT_RANGES")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_limit_range_for_all_namespaces(
@@ -80,7 +80,7 @@ class LIMIT_RANGE_RUNNER(CoreV1Api_RUNNER):
 
 class NODE_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("NODES")
+        super().__init__("CoreV1Api_NODES")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_node(
@@ -90,7 +90,7 @@ class NODE_RUNNER(CoreV1Api_RUNNER):
 
 class PV_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("PVS")
+        super().__init__("CoreV1Api_PVS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_persistent_volume(
@@ -100,7 +100,7 @@ class PV_RUNNER(CoreV1Api_RUNNER):
 
 class PVC_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("PVC")
+        super().__init__("CoreV1Api_PVCS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_persistent_volume_claim_for_all_namespaces(
@@ -110,7 +110,7 @@ class PVC_RUNNER(CoreV1Api_RUNNER):
 
 class POD_TEMPLATE_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("POD_TEMPLATES")
+        super().__init__("CoreV1Api_POD_TEMPLATES")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_pod_template_for_all_namespaces(
@@ -120,7 +120,7 @@ class POD_TEMPLATE_RUNNER(CoreV1Api_RUNNER):
 
 class REPLICATION_CONTROLLER_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("REPLICATION_CONTROLLERS")
+        super().__init__("CoreV1Api_REPLICATION_CONTROLLERS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_replication_controller_for_all_namespaces(
@@ -130,7 +130,7 @@ class REPLICATION_CONTROLLER_RUNNER(CoreV1Api_RUNNER):
 
 class RESOURCE_QUOTA_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("RESOURCE_QUOTAS")
+        super().__init__("CoreV1Api_RESOURCE_QUOTAS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_resource_quota_for_all_namespaces(
@@ -140,7 +140,7 @@ class RESOURCE_QUOTA_RUNNER(CoreV1Api_RUNNER):
 
 class SECRET_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("SECRETS")
+        super().__init__("CoreV1Api_SECRETS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_secret_for_all_namespaces(
@@ -150,7 +150,7 @@ class SECRET_RUNNER(CoreV1Api_RUNNER):
 
 class SERVICE_ACCOUNT_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("SERVICE_ACCOUNTS")
+        super().__init__("CoreV1Api_SERVICE_ACCOUNTS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_service_account_for_all_namespaces(
@@ -160,7 +160,7 @@ class SERVICE_ACCOUNT_RUNNER(CoreV1Api_RUNNER):
 
 class SERVICE_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("SERVICES")
+        super().__init__("CoreV1Api_SERVICES")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_service_for_all_namespaces(
