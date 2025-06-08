@@ -1,0 +1,53 @@
+from state_runners.base.base_runner import BASE_RUNNER
+
+from kubernetes import client
+
+
+class AppsV1Api_RUNNER(BASE_RUNNER):
+    def __init__(self, name) -> None:
+        super().__init__(client.AppsV1Api, name)
+
+class CONTROLLER_VERSION_RUNNER(AppsV1Api_RUNNER):
+    def __init__(self) -> None:
+        super().__init__("CONTROLLER_VERSION")
+
+    def fetch_state(self, _):
+        return self.CLIENTS[_].list_controller_revision_for_all_namespaces(
+            **{"timeout_seconds": 20, "_request_timeout": 20}
+        )
+
+class DAEMONSET_RUNNER(AppsV1Api_RUNNER):
+    def __init__(self) -> None:
+        super().__init__("DAEMONSET")
+
+    def fetch_state(self, _):
+        return self.CLIENTS[_].list_daemon_set_for_all_namespaces(
+            **{"timeout_seconds": 20, "_request_timeout": 20}
+        )
+
+class DEPLOYMENT_RUNNER(AppsV1Api_RUNNER):
+    def __init__(self) -> None:
+        super().__init__("DEPLOYMENT")
+
+    def fetch_state(self, _):
+        return self.CLIENTS[_].list_deployment_for_all_namespaces(
+            **{"timeout_seconds": 20, "_request_timeout": 20}
+        )
+
+class REPLICASET_RUNNER(AppsV1Api_RUNNER):
+    def __init__(self) -> None:
+        super().__init__("REPLICASET")
+
+    def fetch_state(self, _):
+        return self.CLIENTS[_].list_replica_set_for_all_namespaces(
+            **{"timeout_seconds": 20, "_request_timeout": 20}
+        )
+
+class STATEFUL_SET_RUNNER(AppsV1Api_RUNNER):
+    def __init__(self) -> None:
+        super().__init__("STATEFUL_SET")
+
+    def fetch_state(self, _):
+        return self.CLIENTS[_].list_stateful_set_for_all_namespaces(
+            **{"timeout_seconds": 20, "_request_timeout": 20}
+        )
