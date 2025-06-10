@@ -17,9 +17,12 @@ class MUTATING_ADMISSION_POLICY_RUNNER(AdmissionregistrationV1alpha1Api_RUNNER):
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
 
+
 class MUTATING_ADMISSION_POLICY_BINDING_RUNNER(AdmissionregistrationV1alpha1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("AdmissionregistrationV1alpha1Api_MUTATING_ADMISSION_POLICY_BINDINGS")
+        super().__init__(
+            "AdmissionregistrationV1alpha1Api_MUTATING_ADMISSION_POLICY_BINDINGS"
+        )
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_mutating_admission_policy_binding(

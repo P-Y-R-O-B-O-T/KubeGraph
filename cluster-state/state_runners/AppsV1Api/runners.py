@@ -7,6 +7,7 @@ class AppsV1Api_RUNNER(BASE_RUNNER):
     def __init__(self, name) -> None:
         super().__init__(client.AppsV1Api, name)
 
+
 class CONTROLLER_VERSION_RUNNER(AppsV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("AppsV1Api_CONTROLLER_VERSIONS")
@@ -15,6 +16,7 @@ class CONTROLLER_VERSION_RUNNER(AppsV1Api_RUNNER):
         return self.CLIENTS[_].list_controller_revision_for_all_namespaces(
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
+
 
 class DAEMONSET_RUNNER(AppsV1Api_RUNNER):
     def __init__(self) -> None:
@@ -25,6 +27,7 @@ class DAEMONSET_RUNNER(AppsV1Api_RUNNER):
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
 
+
 class DEPLOYMENT_RUNNER(AppsV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("AppsV1Api_DEPLOYMENTS")
@@ -34,6 +37,7 @@ class DEPLOYMENT_RUNNER(AppsV1Api_RUNNER):
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
 
+
 class REPLICASET_RUNNER(AppsV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("AppsV1Api_REPLICASETS")
@@ -42,6 +46,7 @@ class REPLICASET_RUNNER(AppsV1Api_RUNNER):
         return self.CLIENTS[_].list_replica_set_for_all_namespaces(
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
+
 
 class STATEFULSET_RUNNER(AppsV1Api_RUNNER):
     def __init__(self) -> None:

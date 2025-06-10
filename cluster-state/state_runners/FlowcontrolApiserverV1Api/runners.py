@@ -1,4 +1,3 @@
-
 from state_runners.base.base_runner import BASE_RUNNER
 
 from kubernetes import client
@@ -17,6 +16,7 @@ class FLOW_SCHEMA_RUNNER(FlowcontrolApiserverV1Api_RUNNER):
         return self.CLIENTS[_].list_flow_schema(
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
+
 
 class PRIORITY_LEVEL_CONFIG_RUNNER(FlowcontrolApiserverV1Api_RUNNER):
     def __init__(self) -> None:

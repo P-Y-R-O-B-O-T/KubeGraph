@@ -1,4 +1,3 @@
-
 from state_runners.base.base_runner import BASE_RUNNER
 
 from kubernetes import client
@@ -18,6 +17,7 @@ class INGRESS_CLASS_RUNNER(NetworkingV1Api_RUNNER):
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
 
+
 class INGRESS_RUNNER(NetworkingV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("NetworkingV1Api_INGRESSES")
@@ -26,6 +26,7 @@ class INGRESS_RUNNER(NetworkingV1Api_RUNNER):
         return self.CLIENTS[_].list_ingress_for_all_namespaces(
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
+
 
 class IP_ADDRESSE_RUNNER(NetworkingV1Api_RUNNER):
     def __init__(self) -> None:
@@ -36,6 +37,7 @@ class IP_ADDRESSE_RUNNER(NetworkingV1Api_RUNNER):
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
 
+
 class NETWORK_POLICY_RUNNER(NetworkingV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("NetworkingV1Api_NETWORK_POLICIES")
@@ -45,6 +47,7 @@ class NETWORK_POLICY_RUNNER(NetworkingV1Api_RUNNER):
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
 
+
 class SERVICE_CIRD_RUNNER(NetworkingV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("NetworkingV1Api_SERVICE_CIRDS")
@@ -53,4 +56,3 @@ class SERVICE_CIRD_RUNNER(NetworkingV1Api_RUNNER):
         return self.CLIENTS[_].list_service_cidr(
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
-
