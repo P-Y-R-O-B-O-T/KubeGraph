@@ -13,6 +13,4 @@ class LOG_FILE_LIST_HANDLER_RUNNER(LogsApi_RUNNER):
         super().__init__("LogsApi_LOG_FILE_LIST_HANDLERS")
 
     def fetch_state(self, _):
-        return self.CLIENTS[_].log_file_list_handler(
-            **{ "_request_timeout": 20}
-        )
+        return self.CLIENTS[_].log_file_list_handler(**{"_request_timeout": 20})
