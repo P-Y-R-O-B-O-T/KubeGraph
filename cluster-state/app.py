@@ -60,16 +60,16 @@ from state_runners.CertificatesV1Api.runners import (
 from state_runners.DiscoveryV1Api.runners import (
     ENDPOINT_SLICE_RUNNER,
 )
-from state_runners.EventsV1Api.runners import (
-    EVENTS_RUNNER,
-)
+# from state_runners.EventsV1Api.runners import (
+#     EVENTS_RUNNER,
+# )
 from state_runners.FlowcontrolApiserverV1Api.runners import (
     FLOW_SCHEMA_RUNNER,
     PRIORITY_LEVEL_CONFIG_RUNNER,
 )
-from state_runners.LogsApi.runners import (
-    LOG_FILE_LIST_HANDLER_RUNNER,
-)
+# from state_runners.LogsApi.runners import (
+#     LOG_FILE_LIST_HANDLER_RUNNER,
+# )
 from state_runners.NetworkingV1Api.runners import (
     INGRESS_CLASS_RUNNER,
     INGRESS_RUNNER,
@@ -137,10 +137,10 @@ class APP:
             "CRON_JOB_RUNNER": CRON_JOB_RUNNER(),
             "CSR_RUNNER": CSR_RUNNER(),
             "ENDPOINT_SLICE_RUNNER": ENDPOINT_SLICE_RUNNER(), #
-            "EVENTS_RUNNER": EVENTS_RUNNER(), #
+            # "EVENTS_RUNNER": EVENTS_RUNNER(), #
             "FLOW_SCHEMA_RUNNER": FLOW_SCHEMA_RUNNER(),
             "PRIORITY_LEVEL_CONFIG_RUNNER": PRIORITY_LEVEL_CONFIG_RUNNER(),
-            "LOG_FILE_LIST_HANDLER_RUNNER": LOG_FILE_LIST_HANDLER_RUNNER(), #
+            # "LOG_FILE_LIST_HANDLER_RUNNER": LOG_FILE_LIST_HANDLER_RUNNER(), #
             "INGRESS_CLASS_RUNNER": INGRESS_CLASS_RUNNER(),
             "INGRESS_RUNNER": INGRESS_RUNNER(),
             "IP_ADDRESSE_RUNNER": IP_ADDRESSE_RUNNER(), #
