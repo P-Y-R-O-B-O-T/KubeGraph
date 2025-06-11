@@ -16,6 +16,89 @@ from state_runners.CoreV1Api.runners import (
     SERVICE_ACCOUNT_RUNNER,
     SERVICE_RUNNER,
 )
+from state_runners.AdmissionregistrationV1alpha1Api.runners import (
+    MUTATING_ADMISSION_POLICY_RUNNER,
+    MUTATING_ADMISSION_POLICY_BINDING_RUNNER,
+)
+from state_runners.AdmissionregistrationV1Api.runners import (
+    MUTATING_WEBHOOK_CONFIG_RUNNER,
+    VALIDATING_ADMISSION_POLICY_RUNNER,
+    VALIDATING_ADMISSION_POLICY_BINDING_RUNNER,
+    VALIDATING_WEBHOOK_CONFIG_RUNNER,
+)
+# from state_runners.AdmissionregistrationV1beta1Api.runners import (
+#     VALIDATING_ADMISSION_POLICY_RUNNER,
+#     VALIDATING_ADMISSION_POLICY_BINDING_RUNNER,
+# )
+from state_runners.ApiextensionsV1Api.runners import (
+    CUSTOM_RESOURCE_DEFINITION_RUNNER,
+)
+from state_runners.ApiregistrationV1Api.runners import (
+    API_SERVICE_RUNNER,
+)
+from state_runners.AppsV1Api.runners import (
+    CONTROLLER_VERSION_RUNNER,
+    DAEMONSET_RUNNER,
+    DEPLOYMENT_RUNNER,
+    REPLICASET_RUNNER,
+    STATEFULSET_RUNNER,
+)
+from state_runners.AutoscalingV2Api.runners import (
+    HPA_RUNNER,
+)
+from state_runners.BatchV1Api.runners import (
+    JOB_RUNNER,
+    CRON_JOB_RUNNER,
+)
+
+# from state_runners.CertificatesV1alpha1Api.runners import (
+#     ,
+# )
+from state_runners.CertificatesV1Api.runners import (
+    CSR_RUNNER,
+)
+from state_runners.DiscoveryV1Api.runners import (
+    ENDPOINT_SLICE_RUNNER,
+)
+from state_runners.EventsV1Api.runners import (
+    EVENTS_RUNNER,
+)
+from state_runners.FlowcontrolApiserverV1Api.runners import (
+    FLOW_SCHEMA_RUNNER,
+    PRIORITY_LEVEL_CONFIG_RUNNER,
+)
+from state_runners.LogsApi.runners import (
+    LOG_FILE_LIST_HANDLER_RUNNER,
+)
+from state_runners.NetworkingV1Api.runners import (
+    INGRESS_CLASS_RUNNER,
+    INGRESS_RUNNER,
+    IP_ADDRESSE_RUNNER,
+    NETWORK_POLICY_RUNNER,
+    SERVICE_CIRD_RUNNER,
+)
+from state_runners.NodeV1Api.runners import (
+    RUNTIME_CLASS_RUNNER,
+)
+from state_runners.PolicyV1Api.runners import (
+    POD_DISRUPTION_BUDGET_RUNNER,
+)
+from state_runners.RbacAuthorizationV1Api.runners import (
+    CLUSTER_ROLE_RUNNER,
+    CLUSTER_ROLE_BINDINGS_RUNNER,
+    ROLE_BINDING_RUNNER,
+    ROLE_RUNNER,
+)
+from state_runners.SchedulingV1Api.runners import (
+    PRIORITY_CLASS_RUNNER,
+)
+from state_runners.StorageV1Api.runners import (
+    CSI_DRIVER_RUNNER,
+    CSI_NODE_RUNNER,
+    CSI_STORAGE_CAPACITY_RUNNER,
+    STORAGE_CLASS_RUNNER,
+    VOLUME_ATTACHMENT_RUNNER,
+)
 import asyncio
 
 
@@ -38,6 +121,45 @@ class APP:
             "SECRET_RUNNER": SECRET_RUNNER(),
             "SERVICE_RUNNER": SERVICE_RUNNER(),
             "SERVICE_ACCOUNT_RUNNER": SERVICE_ACCOUNT_RUNNER(),
+            "MUTATING_ADMISSION_POLICY_RUNNER": MUTATING_ADMISSION_POLICY_RUNNER(), #
+            "MUTATING_ADMISSION_POLICY_BINDING_RUNNER":MUTATING_ADMISSION_POLICY_BINDING_RUNNER(), #
+            "MUTATING_WEBHOOK_CONFIG_RUNNER": MUTATING_WEBHOOK_CONFIG_RUNNER(),
+            "VALIDATING_ADMISSION_POLICY_RUNNER": VALIDATING_ADMISSION_POLICY_RUNNER(),
+            "VALIDATING_ADMISSION_POLICY_BINDING_RUNNER": VALIDATING_ADMISSION_POLICY_BINDING_RUNNER(),
+            "VALIDATING_WEBHOOK_CONFIG_RUNNER": VALIDATING_WEBHOOK_CONFIG_RUNNER(),
+            "CUSTOM_RESOURCE_DEFINITION_RUNNER": CUSTOM_RESOURCE_DEFINITION_RUNNER(),
+            "API_SERVICE_RUNNER": API_SERVICE_RUNNER(),
+            "CONTROLLER_VERSION_RUNNER": CONTROLLER_VERSION_RUNNER(),
+            "DAEMONSET_RUNNER": DAEMONSET_RUNNER(),
+            "DEPLOYMENT_RUNNER": DEPLOYMENT_RUNNER(),
+            "REPLICASET_RUNNER": REPLICASET_RUNNER(),
+            "STATEFULSET_RUNNER": STATEFULSET_RUNNER(),
+            "HPA_RUNNER": HPA_RUNNER(),
+            "JOB_RUNNER": JOB_RUNNER(),
+            "CRON_JOB_RUNNER": CRON_JOB_RUNNER(),
+            "CSR_RUNNER": CSR_RUNNER(),
+            "ENDPOINT_SLICE_RUNNER": ENDPOINT_SLICE_RUNNER(), #
+            "EVENTS_RUNNER": EVENTS_RUNNER(), #
+            "FLOW_SCHEMA_RUNNER": FLOW_SCHEMA_RUNNER(),
+            "PRIORITY_LEVEL_CONFIG_RUNNER": PRIORITY_LEVEL_CONFIG_RUNNER(),
+            "LOG_FILE_LIST_HANDLER_RUNNER": LOG_FILE_LIST_HANDLER_RUNNER(), #
+            "INGRESS_CLASS_RUNNER": INGRESS_CLASS_RUNNER(),
+            "INGRESS_RUNNER": INGRESS_RUNNER(),
+            "IP_ADDRESSE_RUNNER": IP_ADDRESSE_RUNNER(), #
+            "NETWORK_POLICY_RUNNER": NETWORK_POLICY_RUNNER(),
+            "SERVICE_CIRD_RUNNER": SERVICE_CIRD_RUNNER(), #
+            "RUNTIME_CLASS_RUNNER": RUNTIME_CLASS_RUNNER(),
+            "POD_DISRUPTION_BUDGET_RUNNER": POD_DISRUPTION_BUDGET_RUNNER(),
+            "CLUSTER_ROLE_RUNNER": CLUSTER_ROLE_RUNNER(),
+            "CLUSTER_ROLE_BINDINGS_RUNNER": CLUSTER_ROLE_BINDINGS_RUNNER(),
+            "ROLE_BINDING_RUNNER": ROLE_BINDING_RUNNER(),
+            "ROLE_RUNNER": ROLE_RUNNER(),
+            "PRIORITY_CLASS_RUNNER": PRIORITY_CLASS_RUNNER(),
+            "CSI_DRIVER_RUNNER": CSI_DRIVER_RUNNER(),
+            "CSI_NODE_RUNNER": CSI_NODE_RUNNER(),
+            "CSI_STORAGE_CAPACITY_RUNNER": CSI_STORAGE_CAPACITY_RUNNER(),
+            "STORAGE_CLASS_RUNNER": STORAGE_CLASS_RUNNER(),
+            "VOLUME_ATTACHMENT_RUNNER": VOLUME_ATTACHMENT_RUNNER(),
         }
 
     async def run(self) -> None:
