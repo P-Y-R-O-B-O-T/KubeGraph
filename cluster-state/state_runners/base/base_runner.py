@@ -76,7 +76,7 @@ class BASE_RUNNER:
                         self.RICH_CONSOLE.log(
                             f"[deep_pink3]Error[/ deep_pink3] fetching [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
                         )
-                        # traceback.print_exc()
+                        self.RICH_CONSOLE.log(traceback.format_exc())
 
                 if self.need_file_reload():
                     break
