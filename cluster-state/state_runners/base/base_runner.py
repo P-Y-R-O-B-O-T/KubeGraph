@@ -5,6 +5,7 @@ import os
 import sys
 import time
 from datetime import datetime
+import traceback
 
 import constants.constants as CONSTANTS
 import kubeconfig_utils.utils as KUBECONFIG_UTILS
@@ -75,6 +76,7 @@ class BASE_RUNNER:
                         self.RICH_CONSOLE.log(
                             f"[deep_pink3]Error[/ deep_pink3] fetching [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
                         )
+                        # traceback.print_exc()
 
                 if self.need_file_reload():
                     break
