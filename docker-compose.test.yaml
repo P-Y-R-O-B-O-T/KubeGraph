@@ -1,15 +1,44 @@
 services:
   cluster-state:
     image: kubegraph-cluster-state:latest
-    container_name: cluster-state
+    container_name: cluster-state-kubegraph
+    restart: unless-stopped
     volumes:
       - /kubeconf:/kubeconf
+    networks:
+      - cluster-state-kubegraph
+
+  mongo:
+    image: mongo
+    container_name: mongo-kubegraph
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: KubeGraph
+      MONGO_INITDB_ROOT_PASSWORD: KubeGraph
+    # ports:
+    #   - 27017:27017
+    networks:
+      - mongo-kubegraph
+
+  redis:
+    image: redis:8.0.2-alpine3.21
+    container_name: redis-kubegraph
     restart: unless-stopped
     networks:
-      - cluster-state
+        - redis-kubegraph
+
+  # api:
+  #   image: kubegraph-api:latest
+  #   container_name: api-kubegraph
+  #   restart: unless-stopped
+  #   networks:
+  #       - api-kubegraph
 
 networks:
-  cluster-state:
+  cluster-state-kubegraph:
+  mongo-kubegraph:
+  redis-kubegraph:
+  api-kubegraph:
 
 volumes:
   kubeconfig:
