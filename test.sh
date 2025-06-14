@@ -1,5 +1,15 @@
 #!/bin/bash
 
+create_directory() {
+  if [ -d "/kubeconf" ]; then
+    echo "/kubeconf Directory exists"
+    # Add commands to execute if the directory exists
+  else
+    sudo mkdir /kubeconf
+    # Add commands to execute if the directory doesn't exist
+  fi
+}
+
 build_cluster_state_image() {
     echo "Building Docker image kubegraph-cluster-state:latest..."
     cd cluster-state || exit 1
@@ -19,6 +29,7 @@ run_compose() {
     sudo docker compose -f docker-compose.test.yaml up
 }
 
+create_directory
 build_cluster_state_image
 build_api_image
 run_compose
