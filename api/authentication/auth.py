@@ -25,7 +25,9 @@ class AuthService:
     def __init__(self) -> None:
         pass
 
-    def get_auth_token(self, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
+    def get_auth_token(
+        self, form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+    ) -> Token:
         pass
         user = self.authenticate_user(form_data.username, form_data.password)
         if not user:
@@ -39,7 +41,6 @@ class AuthService:
             data={"sub": user.username}, expires_delta=access_token_expires
         )
         return Token(access_token=access_token, token_type="bearer")
-
 
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
         return PWD_CONTEXT.verify(plain_password, hashed_password)

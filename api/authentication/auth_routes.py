@@ -5,13 +5,13 @@ from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from fastapi import APIRouter
 
+
 class AuthRoutes:
     def __init__(self) -> None:
         self.AUTH_MECHANISM = AuthService()
         self.ROUTER = APIRouter(prefix="/auth", tags=["auth"])
 
         self.ROUTER.post("/token", response_model=Token)(self.login_for_access_token)
-
 
     async def login_for_access_token(
         self,
