@@ -5,15 +5,15 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from auth import AuthService
-from schemas import Token
+from authentication.auth import AuthService
+from authentication.schemas import Token
 
-app = FastAPI()
+APP = FastAPI()
 
 auth_service = AuthService()
 
 
-@app.post("/token", response_model=Token)
+@APP.post("/token", response_model=Token)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db: Annotated[dict, Depends(auth_service.get_db)]
