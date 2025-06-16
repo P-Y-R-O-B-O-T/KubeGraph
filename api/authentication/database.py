@@ -1,4 +1,3 @@
-from typing import Optional, Dict, Union
 from authentication.schemas import UserInDB
 
 
