@@ -47,6 +47,13 @@ create_directory() {
   fi
 }
 
+build_init_db() {
+    echo "Building Docker image kubegraph-init-db:latest..."
+    cd init-db || exit 1
+    sudo docker build --progress=plain --no-cache -t kubegraph-init-db:latest .
+    cd .. || exit 1
+}
+
 build_cluster_state_image() {
     echo "Building Docker image kubegraph-cluster-state:latest..."
     cd cluster-state || exit 1
@@ -68,6 +75,8 @@ run_compose() {
 
 create_directory
 create_dot_env
+sudo docker-compose rm -f
+build_init_db
 build_cluster_state_image
 build_api_image
 run_compose
