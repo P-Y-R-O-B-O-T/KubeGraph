@@ -50,7 +50,7 @@ services:
       - mongo
 
   init-db:
-    image: python:3.12.10-slim-bookworm
+    image: kubegraph-init-db:latest
     container_name: init-db
     networks:
       - mongo-kubegraph
