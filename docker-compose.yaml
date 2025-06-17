@@ -27,12 +27,14 @@ services:
     networks:
         - redis-kubegraph
 
-  # api:
-  #   image: kubegraph-api:latest
-  #   container_name: api-kubegraph
-  #   restart: unless-stopped
-  #   networks:
-  #       - api-kubegraph
+  api:
+    image: kubegraph-api:latest
+    container_name: api-kubegraph
+    restart: unless-stopped
+    ports:
+      - 8888:8000
+    networks:
+      - api-kubegraph
 
 networks:
   cluster-state-kubegraph:
