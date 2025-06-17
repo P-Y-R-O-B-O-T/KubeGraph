@@ -10,6 +10,8 @@ services:
     environment:
       - CLUSTER_STATE_API_CRED_USER=${CLUSTER_STATE_API_CRED_USER}
       - CLUSTER_STATE_API_CRED_PASSWD=${CLUSTER_STATE_API_CRED_PASSWD}
+    depends_on:
+      - api
 
   mongo:
     image: mongo
@@ -42,6 +44,8 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - API_AUTH_SECRET_KEY=${API_AUTH_SECRET_KEY}
+    depends_on:
+      - mongo
 
   init-db:
     image: python:3.12.10-slim-bookworm
@@ -58,6 +62,8 @@ services:
       - CLUSTER_WATCH_API_CRED_PASSWD=${CLUSTER_WATCH_API_CRED_PASSWD}
       - CLUSTER_STATE_API_CRED_USER=${CLUSTER_STATE_API_CRED_USER}
       - CLUSTER_STATE_API_CRED_PASSWD=${CLUSTER_STATE_API_CRED_PASSWD}
+    depends_on:
+      - mongo
 
 networks:
   cluster-state-kubegraph:
