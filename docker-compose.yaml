@@ -24,6 +24,8 @@ services:
       - 27072:27017
     networks:
       - mongo-kubegraph
+    volumes:
+      - mongo:/data/db
 
   redis:
     image: redis:8.0.2-alpine3.21
@@ -73,4 +75,6 @@ networks:
 
 volumes:
   kubeconfig:
+    driver: local
+  mongo:
     driver: local

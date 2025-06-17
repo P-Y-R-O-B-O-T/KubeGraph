@@ -26,7 +26,9 @@ admin_user = USERS_COLLECTION.find_one({"username": os.getenv("ADMIN_API_CRED_US
 cluster_state_user = USERS_COLLECTION.find_one({"username": os.getenv("CLUSTER_STATE_API_CRED_USER")})
 cluster_watch_user = USERS_COLLECTION.find_one({"username": os.getenv("CLUSTER_WATCH_API_CRED_USER")})
 
-if not admin_user:
+print(admin_user, cluster_state_user, cluster_watch_user)
+
+if admin_user is None:
     try:
         USERS_COLLECTION.insert_one({"username": os.getenv("ADMIN_API_CRED_USER"),
                                      "hashed_password": PWD_CONTEXT.hash(str(os.getenv("ADMIN_API_CRED_PASSWD"))),
@@ -35,7 +37,7 @@ if not admin_user:
         print("Created admin user")
     except:
         traceback.print_exc()
-if not cluster_state_user:
+if cluster_state_user is None:
     try:
         USERS_COLLECTION.insert_one({"username": os.getenv("CLUSTER_WATCH_API_CRED_USER"),
                                      "hashed_password": PWD_CONTEXT.hash(str(os.getenv("CLUSTER_WATCH_API_CRED_PASSWD"))),
@@ -44,7 +46,7 @@ if not cluster_state_user:
         print("Created cluster watch user")
     except:
         traceback.print_exc()
-if not cluster_watch_user:
+if cluster_watch_user is None:
     try:
         USERS_COLLECTION.insert_one({"username": os.getenv("CLUSTER_STATE_API_CRED_USER"),
                                      "hashed_password": PWD_CONTEXT.hash(str(os.getenv("CLUSTER_STATE_API_CRED_PASSWD"))),
