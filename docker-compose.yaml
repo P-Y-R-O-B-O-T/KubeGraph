@@ -41,6 +41,7 @@ services:
     ports:
       - 8888:8000
     networks:
+      - mongo-kubegraph
       - api-kubegraph
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
