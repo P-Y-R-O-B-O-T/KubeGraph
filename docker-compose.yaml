@@ -7,18 +7,25 @@ services:
       - kubeconfig:/kubeconf
     networks:
       - cluster-state-kubegraph
+    environment:
+      - CLUSTER_STATE_API_CRED_USER=${CLUSTER_STATE_API_CRED_USER}
+      - CLUSTER_STATE_API_CRED_PASSWD=${CLUSTER_STATE_API_CRED_PASSWD}
+    depends_on:
+      - api
 
   mongo:
     image: mongo
     container_name: mongo-kubegraph
     restart: unless-stopped
     environment:
-      MONGO_INITDB_ROOT_USERNAME: KubeGraph
-      MONGO_INITDB_ROOT_PASSWORD: KubeGraph
-    # ports:
-    #   - 27017:27017
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - 27072:27017
     networks:
       - mongo-kubegraph
+    volumes:
+      - mongo:/data/db
 
   redis:
     image: redis:8.0.2-alpine3.21
@@ -27,12 +34,38 @@ services:
     networks:
         - redis-kubegraph
 
-  # api:
-  #   image: kubegraph-api:latest
-  #   container_name: api-kubegraph
-  #   restart: unless-stopped
-  #   networks:
-  #       - api-kubegraph
+  api:
+    image: kubegraph-api:latest
+    container_name: api-kubegraph
+    restart: unless-stopped
+    ports:
+      - 8888:8000
+    networks:
+      - api-kubegraph
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - API_AUTH_SECRET_KEY=${API_AUTH_SECRET_KEY}
+    depends_on:
+      - mongo
+
+  init-db:
+    image: kubegraph-init-db:latest
+    container_name: init-db
+    networks:
+      - mongo-kubegraph
+    environment:
+      - API_AUTH_SECRET_KEY=${API_AUTH_SECRET_KEY}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - ADMIN_API_CRED_USER=${ADMIN_API_CRED_USER}
+      - ADMIN_API_CRED_PASSWD=${ADMIN_API_CRED_PASSWD}
+      - CLUSTER_WATCH_API_CRED_USER=${CLUSTER_WATCH_API_CRED_USER}
+      - CLUSTER_WATCH_API_CRED_PASSWD=${CLUSTER_WATCH_API_CRED_PASSWD}
+      - CLUSTER_STATE_API_CRED_USER=${CLUSTER_STATE_API_CRED_USER}
+      - CLUSTER_STATE_API_CRED_PASSWD=${CLUSTER_STATE_API_CRED_PASSWD}
+    depends_on:
+      - mongo
 
 networks:
   cluster-state-kubegraph:
@@ -42,4 +75,6 @@ networks:
 
 volumes:
   kubeconfig:
+    driver: local
+  mongo:
     driver: local
