@@ -8,17 +8,17 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security import OAuth2PasswordRequestForm
-from authentication.database import Database
+from authentication.database import UsersDB
 from authentication.schemas import User, UserInDB, Token
 
 load_dotenv()
 
 PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
-SECRET_KEY = "dfgfgfgbdfkbvkfbvkkx"  # os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("API_AUTH_SECRET_KEY")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="token")
-USERS_DB = Database()
+USERS_DB = UsersDB("USERS", "USERS")
 
 
 class AuthService:
