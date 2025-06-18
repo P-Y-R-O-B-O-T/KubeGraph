@@ -9,5 +9,5 @@ class UsersDB(Mongo):
 
     def get_user(self, username: str) -> UserInDB | None:
         user = self.COLLECTION.find_one({"username": username})
-        if user is not None :
+        if user is not None:
             return UserInDB(**user)
