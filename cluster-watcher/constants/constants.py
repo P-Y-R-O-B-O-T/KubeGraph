@@ -1,0 +1,1 @@
+KUBECONF_PATH = "/kubeconf"
