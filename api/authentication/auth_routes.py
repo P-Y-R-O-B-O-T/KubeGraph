@@ -1,20 +1,15 @@
 from fastapi import Depends
 from authentication.schemas import Token
-from authentication.auth import AuthService
+from authentication.auth import get_auth_token
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from fastapi import APIRouter
 
 
-class AuthRoutes:
-    def __init__(self) -> None:
-        self.AUTH_MECHANISM = AuthService()
-        self.ROUTER = APIRouter(prefix="/auth", tags=["auth"])
+AUTH_ROUTER = APIRouter(prefix="/auth", tags=["auth"])
 
-        self.ROUTER.post("/token", response_model=Token)(self.login_for_access_token)
-
-    async def login_for_access_token(
-        self,
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-    ):
-        return self.AUTH_MECHANISM.get_auth_token(form_data)
+@AUTH_ROUTER.post("/token", response_model=Token)
+async def login_for_access_token(
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+):
+    return get_auth_token(form_data)
