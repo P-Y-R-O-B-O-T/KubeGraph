@@ -12,9 +12,13 @@ RUN apt update
 
 RUN apt install tree -y
 
-COPY . .
+COPY ./requirements.txt .
 
 RUN pip3 install -r requirements.txt --break-system-packages
+
+RUN rm requirements.txt
+
+COPY . .
 
 RUN tree
 
