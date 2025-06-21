@@ -50,21 +50,21 @@ create_directory() {
 build_init_db() {
     echo "Building Docker image kubegraph-init-db:latest..."
     cd init-db || exit 1
-    sudo docker build --progress=plain --no-cache -t kubegraph-init-db:latest .
+    sudo docker build --progress=plain -t kubegraph-init-db:latest .
     cd .. || exit 1
 }
 
 build_cluster_state_image() {
     echo "Building Docker image kubegraph-cluster-state:latest..."
     cd cluster-state || exit 1
-    sudo docker build --progress=plain --no-cache -t kubegraph-cluster-state:latest .
+    sudo docker build --progress=plain -t kubegraph-cluster-state:latest .
     cd .. || exit 1
 }
 
 build_api_image() {
     echo "Building Docker image kubegraph-api:latest..."
     cd api || exit 1
-    sudo docker build --progress=plain --no-cache -t kubegraph-api:latest .
+    sudo docker build --progress=plain -t kubegraph-api:latest .
     cd .. || exit 1
 }
 
