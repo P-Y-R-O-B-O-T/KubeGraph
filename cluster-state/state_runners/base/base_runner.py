@@ -20,10 +20,9 @@ class BASE_RUNNER:
             log_path=False,
             safe_box=False,
         )
-        self.STACK_API_CONNECTOR = APIConnector() # STACK API CONNECTOR
+        self.STACK_API_CONNECTOR = APIConnector()  # STACK API CONNECTOR
         self.API_OBJECT_CLASS = api_object_class
         self.NAME = name
-
 
     def convert_datetimes_to_strings(self, obj):
         # if isinstance(obj, dict):
@@ -35,7 +34,10 @@ class BASE_RUNNER:
         # else:
         #     return obj
         if isinstance(obj, dict):
-            return {key: self.convert_datetimes_to_strings(value) for key, value in obj.items()}
+            return {
+                key: self.convert_datetimes_to_strings(value)
+                for key, value in obj.items()
+            }
         elif isinstance(obj, (list, tuple)):
             # Convert tuples to lists for JSON compatibility if you want, but here we keep the type
             # If you want to preserve tuples, use: return tuple(convert_datetimes_to_strings(item) for item in obj)
