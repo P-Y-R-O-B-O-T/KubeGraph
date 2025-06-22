@@ -7,9 +7,11 @@ class ClusterDataUpload(BaseModel):
     resource_type: str
     cluster_data: Dict
 
+
 class ClusterData(BaseModel):
     cluster_name: str
     cluster_data: Dict
+
 
 class ClusterDataRequest(BaseModel):
     cluster_name: str

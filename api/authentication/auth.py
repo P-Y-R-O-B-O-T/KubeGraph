@@ -18,9 +18,7 @@ OAUTH2_SCHEME = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 USERS_DB = UsersDB("USERS", "USERS")
 
 
-def get_auth_token(
-    form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
-) -> Token:
+def get_auth_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -> Token:
     pass
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
@@ -35,17 +33,21 @@ def get_auth_token(
     )
     return Token(access_token=access_token, token_type="bearer")
 
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     return PWD_CONTEXT.verify(plain_password, hashed_password)
 
+
 def get_password_hash(password: str) -> str:
     return PWD_CONTEXT.hash(password)
+
 
 def authenticate_user(username: str, password: str) -> UserInDB | None:
     user = USERS_DB.get_user(username)
     if not user or not verify_password(password, user.hashed_password):
         return None
     return user
+
 
 def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
@@ -57,6 +59,7 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
+
 def decode_token(token: str) -> str | None:
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -64,6 +67,7 @@ def decode_token(token: str) -> str | None:
         return username
     except InvalidTokenError:
         return None
+
 
 async def get_current_user(
     token: Annotated[str, Depends(OAUTH2_SCHEME)],
@@ -81,6 +85,7 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
 
 async def get_current_active_user(
     current_user: Annotated[User, Depends(get_current_user)],

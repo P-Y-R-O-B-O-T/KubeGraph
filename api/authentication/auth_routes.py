@@ -8,6 +8,7 @@ from fastapi import APIRouter
 
 AUTH_ROUTER = APIRouter(prefix="/auth", tags=["auth"])
 
+
 @AUTH_ROUTER.post("/token", response_model=Token)
 async def login_for_access_token(
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
