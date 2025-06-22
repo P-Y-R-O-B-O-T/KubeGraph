@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from typing import Any
 from rich.console import Console
 import asyncio
 import os
@@ -20,28 +21,17 @@ class BASE_RUNNER:
             log_path=False,
             safe_box=False,
         )
-        self.STACK_API_CONNECTOR = APIConnector()  # STACK API CONNECTOR
+        self.STACK_API_CONNECTOR = APIConnector()
         self.API_OBJECT_CLASS = api_object_class
         self.NAME = name
 
-    def convert_datetimes_to_strings(self, obj):
-        # if isinstance(obj, dict):
-        #     return {key: self.convert_datetimes_to_iso(value) for key, value in obj.items()}
-        # elif isinstance(obj, (list, tuple)):
-        #     return [self.convert_datetimes_to_iso(item) for item in obj]
-        # elif isinstance(obj, datetime):
-        #     return str(obj.isoformat())
-        # else:
-        #     return obj
+    def convert_datetimes_to_strings(self, obj: Any) -> Any:
         if isinstance(obj, dict):
             return {
                 key: self.convert_datetimes_to_strings(value)
                 for key, value in obj.items()
             }
         elif isinstance(obj, (list, tuple)):
-            # Convert tuples to lists for JSON compatibility if you want, but here we keep the type
-            # If you want to preserve tuples, use: return tuple(convert_datetimes_to_strings(item) for item in obj)
-            # For JSON, lists are preferred, so this example returns lists for both list and tuple
             return [self.convert_datetimes_to_strings(item) for item in obj]
         elif isinstance(obj, datetime):
             return obj.isoformat()
@@ -83,22 +73,20 @@ class BASE_RUNNER:
             while True:
 
                 for _ in self.CLIENTS:
-                    DATA = {}
 
-                    self.RICH_CONSOLE.log(
-                        f"[khaki1]Fetching[/ khaki1] [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
-                    )
                     start_time = time.time()
                     try:
-                        # fetched = await asyncio.to_thread(self.fetch_state, _)
-                        fetched = self.fetch_state(_)
-                        self.structure_data(DATA, fetched.to_dict())
-                        DATA = self.convert_datetimes_to_strings(DATA)
-                        self.STACK_API_CONNECTOR.upload_data(_, self.NAME, DATA)
-
+                        self.RICH_CONSOLE.log(
+                            f"[khaki1]Fetching[/ khaki1] [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+                        )
+                        fetched = self.fetch_state(_) # await asyncio.to_thread(self.fetch_state, _)
                         self.RICH_CONSOLE.log(
                             f"[spring_green1]Fetched[/ spring_green1]  [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"
                         )
+
+                        structured_data = self.structure_data(fetched.to_dict())
+                        self.STACK_API_CONNECTOR.upload_data(_, self.NAME, structured_data)
+
                     except:
                         self.RICH_CONSOLE.log(
                             f"[deep_pink3]Error[/ deep_pink3] fetching [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
@@ -109,9 +97,11 @@ class BASE_RUNNER:
                     break
                 await asyncio.sleep(10)
 
-    def structure_data(self, DATA, fetched: dict) -> None:
+    def structure_data(self, fetched: dict) -> dict:
+        data = {}
         for _ in fetched["items"]:
-            DATA[_["metadata"]["name"]] = _
+            data[_["metadata"]["name"]] = _
+        return self.convert_datetimes_to_strings(data)
 
     def need_file_reload(self) -> bool:
         return sorted(self.FILES) != sorted(os.listdir(CONSTANTS.KUBECONF_PATH))
