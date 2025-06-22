@@ -12,6 +12,7 @@ services:
       - CLUSTER_STATE_API_CRED_PASSWD=${CLUSTER_STATE_API_CRED_PASSWD}
     depends_on:
       - api
+      - nginx
 
   mongo:
     image: mongo
@@ -74,6 +75,7 @@ services:
     networks:
       - api-kubegraph
       - frontend-kubegraph
+      - cluster-state-kubegraph
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:

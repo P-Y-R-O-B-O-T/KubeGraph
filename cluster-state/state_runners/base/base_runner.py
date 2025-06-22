@@ -9,6 +9,7 @@ import traceback
 
 import constants.constants as CONSTANTS
 import kubeconfig_utils.utils as KUBECONFIG_UTILS
+from api_connector.connector import APIConnector
 
 
 class BASE_RUNNER:
@@ -19,9 +20,31 @@ class BASE_RUNNER:
             log_path=False,
             safe_box=False,
         )
-
+        self.STACK_API_CONNECTOR = APIConnector() # STACK API CONNECTOR
         self.API_OBJECT_CLASS = api_object_class
         self.NAME = name
+
+
+    def convert_datetimes_to_strings(self, obj):
+        # if isinstance(obj, dict):
+        #     return {key: self.convert_datetimes_to_iso(value) for key, value in obj.items()}
+        # elif isinstance(obj, (list, tuple)):
+        #     return [self.convert_datetimes_to_iso(item) for item in obj]
+        # elif isinstance(obj, datetime):
+        #     return str(obj.isoformat())
+        # else:
+        #     return obj
+        if isinstance(obj, dict):
+            return {key: self.convert_datetimes_to_strings(value) for key, value in obj.items()}
+        elif isinstance(obj, (list, tuple)):
+            # Convert tuples to lists for JSON compatibility if you want, but here we keep the type
+            # If you want to preserve tuples, use: return tuple(convert_datetimes_to_strings(item) for item in obj)
+            # For JSON, lists are preferred, so this example returns lists for both list and tuple
+            return [self.convert_datetimes_to_strings(item) for item in obj]
+        elif isinstance(obj, datetime):
+            return obj.isoformat()
+        else:
+            return obj
 
     def load_clients(self) -> None:
         self.RICH_CONSOLE.print(f"Loading files {self.NAME}")
@@ -68,6 +91,8 @@ class BASE_RUNNER:
                         # fetched = await asyncio.to_thread(self.fetch_state, _)
                         fetched = self.fetch_state(_)
                         self.structure_data(DATA, fetched.to_dict())
+                        DATA = self.convert_datetimes_to_strings(DATA)
+                        self.STACK_API_CONNECTOR.upload_data(_, self.NAME, DATA)
 
                         self.RICH_CONSOLE.log(
                             f"[spring_green1]Fetched[/ spring_green1]  [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"

@@ -1,4 +1,4 @@
-from fastapi import Depends
+from fastapi import Body, Depends
 from cluster_data.methods import get_cluster_data, set_cluster_data
 from cluster_data.schemas import ClusterDataRequest, ClusterData, ClusterDataUpload
 from authentication.auth import get_current_active_user
@@ -14,8 +14,8 @@ CLUSTERS_DATA = {}
 
 
 @CLUSTER_DATA_ROUTER.post("/data", status_code=status.HTTP_202_ACCEPTED)
-def upload_cluster_data(
-    data: Annotated[ClusterDataUpload, Depends()],
+async def upload_cluster_data(
+    data: Annotated[ClusterDataUpload, Body()],
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
     set_cluster_data(CLUSTERS_DATA, data)
@@ -23,7 +23,7 @@ def upload_cluster_data(
 
 
 @CLUSTER_DATA_ROUTER.get("/data", response_model=ClusterData)
-def fetch_cluster_data(
+async def fetch_cluster_data(
     cluster_data_request: Annotated[ClusterDataRequest, Depends()],
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
