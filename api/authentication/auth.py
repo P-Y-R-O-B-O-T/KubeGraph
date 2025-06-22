@@ -4,11 +4,12 @@ import jwt
 from jwt.exceptions import InvalidTokenError
 from passlib.context import CryptContext
 from typing import Annotated
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.security import OAuth2PasswordRequestForm
 from authentication.database import UsersDB
 from authentication.schemas import User, UserInDB, Token
+from authentication.errors import INCORRECT_CREDENTIALS, ILLEGAL_EXPIRED_TOKEN
 
 PWD_CONTEXT = CryptContext(schemes=["bcrypt"], deprecated="auto")
 SECRET_KEY = os.getenv("API_AUTH_SECRET_KEY")
@@ -22,11 +23,7 @@ def get_auth_token(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]) -
     pass
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect username or password",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        raise HTTPException(**INCORRECT_CREDENTIALS)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
@@ -72,11 +69,7 @@ def decode_token(token: str) -> str | None:
 async def get_current_user(
     token: Annotated[str, Depends(OAUTH2_SCHEME)],
 ) -> User:
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
+    credentials_exception = HTTPException(**ILLEGAL_EXPIRED_TOKEN)
     username = decode_token(token)
     if username is None:
         raise credentials_exception
