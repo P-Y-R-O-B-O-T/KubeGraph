@@ -1,9 +1,6 @@
-
 FROM python:3.12.10-slim-bookworm
 
 RUN mkdir /apps
-
-RUN mkdir /kubeconf
 
 ENV PYTHONUNBUFFERED=1
 
@@ -23,4 +20,4 @@ COPY . .
 
 RUN tree
 
-ENTRYPOINT ["uvicorn", "app:APP", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["python3", "app.py"]

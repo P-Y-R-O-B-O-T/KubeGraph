@@ -88,7 +88,7 @@ import asyncio
 class APP:
     def __init__(self) -> None:
         self.STATE_OBJECTS = {
-            "POD_TEMPLATE_RUNNER": POD_RUNNER(),
+            "POD_RUNNER": POD_RUNNER(),
             "NAMESPACE": NAMESPACE_RUNNER(),
             "CONFIGMAP_RUNNER": CONFIGMAP_RUNNER(),
             "COMPONENT_STATUS_RUNNER": COMPONENT_STATUS_RUNNER(),
