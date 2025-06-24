@@ -45,7 +45,7 @@
         localStorage.setItem("authToken", data.access_token); // Store the JWT
         localStorage.setItem("username", username);
         
-        localStorage.removeItem("auth"); 
+        // localStorage.removeItem("auth"); 
 
         // Redirect based on access level
         if (data.access_token) {

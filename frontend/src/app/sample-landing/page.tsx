@@ -7,16 +7,17 @@
     const router = useRouter();
     // const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
     const [adminName, setAdminName] = useState('');
-  //   useEffect(() => {
-  //   const authToken = localStorage.getItem("authToken"); // Check for the JWT
-  //   setAdminName(localStorage.getItem('username'));
-  //   if (!authToken) {
+    
+    useEffect(() => {
+    const authToken = localStorage.getItem("authToken"); // Check for the JWT
+    setAdminName(localStorage.getItem('username'));
+    if (!authToken) {
 
-  //     router.push("/auth/login");
-  //     alert("You do not have permission to access this page."); // More informative
-  //     return; // Important to return to prevent further checks after redirect
-  //   }
-  // }, [router]);
+      router.push("/auth/login");
+      alert("You do not have permission to access this page."); // More informative
+      return; // Important to return to prevent further checks after redirect
+    }
+  }, [router]);
 
 
   return (
