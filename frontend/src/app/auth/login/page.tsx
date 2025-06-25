@@ -8,8 +8,8 @@
   const Login: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    // const [error, setError] = useState("");
+    // const [loading, setLoading] = useState(false);
 
   const router = useRouter();
   // const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
@@ -17,12 +17,12 @@
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    setError("");
+    // setLoading(true);
+    // setError("");
 
     if (!backendApiUrl) {
-        setError("API URL is not configured. Please contact support.");
-        setLoading(false);
+        // setError("API URL is not configured. Please contact support.");
+        // setLoading(false);
         return;
     }
 
@@ -31,7 +31,7 @@
       formData.append('username', username);
       formData.append('password', password);
 
-      const res = await fetch(`${backendApiUrl}/api/auth/token`, { // Changed to /api/auth/token
+      const res = await fetch(`/api/auth/token`, { // Changed to /api/auth/token
         method: "POST",
         headers: { 
             "Content-Type": "application/x-www-form-urlencoded" // Correct header for form data
@@ -51,19 +51,19 @@
         if (data.access_token) {
           router.push("/sample-landing");    
         } else {
-            setError("Unknown user role received from server.");
+            // setError("Unknown user role received from server.");
             localStorage.removeItem("authToken");
             localStorage.removeItem("username");
         }
       } else {
-        setError(data.detail || "Invalid credentials or login failed.");
+        // setError(data.detail || "Invalid credentials or login failed.");
       }
     } catch (err) {
       console.error("Login error:", err);
-      const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred.";
-      setError(`Login failed: ${errorMessage}. Please try again.`);
+      // const errorMessage = err instanceof Error ? err.message : "An unexpected error occurred.";
+      // setError(`Login failed: ${errorMessage}. Please try again.`);
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   };
 

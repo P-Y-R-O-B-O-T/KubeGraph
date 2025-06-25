@@ -44,6 +44,13 @@ build_init_db() {
     cd .. || exit 1
 }
 
+build_frontend() {
+    echo "Building Docker image kubegraph-frontend:latest..."
+    cd frontend || exit 1
+    sudo docker build --progress=plain -t kubegraph-frontend:latest .
+    cd .. || exit 1
+}
+
 build_cluster_state_image() {
     echo "Building Docker image kubegraph-cluster-state:latest..."
     cd cluster-state || exit 1
@@ -65,6 +72,7 @@ run_compose() {
 
 create_dot_env
 sudo docker-compose rm -f
+build_frontend
 build_init_db
 build_cluster_state_image
 build_api_image

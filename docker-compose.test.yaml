@@ -82,6 +82,15 @@ services:
       - 8008:80
     depends_on:
       - api
+      - frontend
+
+  frontend:
+    image: kubegraph-frontend:latest
+    container_name: kubegraph-frontend
+    networks:
+      - frontend-kubegraph
+    ports:
+      - 3000:3000
 
 networks:
   cluster-state-kubegraph:
