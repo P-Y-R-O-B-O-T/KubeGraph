@@ -12,50 +12,38 @@
     // const [loading, setLoading] = useState(false);
 
   const router = useRouter();
-  // const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-  const backendApiUrl = "http://localhost:8008";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     // setLoading(true);
     // setError("");
 
-    if (!backendApiUrl) {
-        // setError("API URL is not configured. Please contact support.");
-        // setLoading(false);
-        return;
-    }
-
     try {
       const formData = new URLSearchParams();
       formData.append('username', username);
       formData.append('password', password);
 
-      const res = await fetch(`/api/auth/token`, { // Changed to /api/auth/token
+      const res = await fetch(`/api/auth/token`, {
         method: "POST",
         headers: { 
-            "Content-Type": "application/x-www-form-urlencoded" // Correct header for form data
+            "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: formData.toString(), // Send as URL-encoded string
+        body: formData.toString(),
       });
 
       const data = await res.json();
 
-      if (res.ok && data.access_token) { // Check for res.ok and the actual access_token
-        localStorage.setItem("authToken", data.access_token); // Store the JWT
-        localStorage.setItem("username", username);
-        
-        // localStorage.removeItem("auth"); 
-
-        // Redirect based on access level
-        if (data.access_token) {
-          router.push("/sample-landing");    
-        } else {
-            // setError("Unknown user role received from server.");
-            localStorage.removeItem("authToken");
-            localStorage.removeItem("username");
-        }
-      } else {
+      if (res.ok && data.access_token) {
+        // Set cookies via API route (token is HTTP-only, username is not)
+        await fetch('/next-api/set-cookie', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token: data.access_token, username: username })
+        });
+  
+        router.push("/sample-landing");
+      }
+       else {
         // setError(data.detail || "Invalid credentials or login failed.");
       }
     } catch (err) {

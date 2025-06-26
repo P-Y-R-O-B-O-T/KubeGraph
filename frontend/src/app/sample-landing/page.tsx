@@ -1,42 +1,62 @@
 "use client";
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
+import { Button } from '@/components/ui/button';
 import Image from 'next/image';
+
+function getCookie(name: string): string | null {
+  const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+  return match ? decodeURIComponent(match.pop() as string) : null;
+}
 
 const SampleLanding: React.FC = () => {
   const router = useRouter();
-  // const backendApiUrl = process.env.NEXT_PUBLIC_BACKEND_API_URL;
-  // const [adminName, setAdminName] = useState('');
-  
+  const [username, setUsername] = useState('');
+
   useEffect(() => {
-  const authToken = localStorage.getItem("authToken"); // Check for the JWT
-  // setAdminName(localStorage.getItem('username'));
-  if (!authToken) {
+    setUsername(getCookie('username') || '');
+  }, []);
 
-    router.push("/auth/login");
-    alert("You do not have permission to access this page."); // More informative
-    return; // Important to return to prevent further checks after redirect
-  }
-}, [router]);
+  const handleLogout = async () => {
+    try {
+      await fetch('/next-api/logout', {
+        method: 'POST',
+        credentials: 'include', // Ensure cookies are sent
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      setUsername('');
+      router.push('/login');
+    } catch (err) {
+      console.error(err);
+      alert('Logout failed. Please try again.');
+    }
+  };
 
-
-return (
-  <div className="flex items-center justify-center min-h-screen">
-    <div className="bg-white p-8 rounded-2xl shadow-md w-96">
-      <div className="flex items-center justify-center mb-2">
-        <Image
-          src="/KubeGraph-logo.png"
-          alt="KubeGraph Logo"
-          width={50} // Adjust width as needed
-          height={50} // Adjust height as needed
-          className="mr-2" // Add some margin to the right of the image
-        />
-        <h1 className="text-3xl font-thin">KubeGraph</h1>
+  return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="bg-white p-8 rounded-2xl shadow-md w-96">
+        <div className="flex items-center justify-center mb-2">
+          <Image
+            src="/KubeGraph-logo.png"
+            alt="KubeGraph Logo"
+            width={50}
+            height={50}
+            className="mr-2"
+          />
+          <h1 className="text-3xl font-thin">KubeGraph</h1>
+        </div>
+        <h2 className="text-2xl font-semibold mb-4 text-center">Sample Landing</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-center">{username}</h2>
+        <div className="flex items-center justify-center mt-4">
+          <Button type="button" onClick={handleLogout}>
+            Logout
+          </Button>
+        </div>
       </div>
-      <h2 className="text-2xl font-semibold mb-4 text-center">SampleLanding</h2>
     </div>
-  </div>
-);
+  );
 };
 
 export default SampleLanding;
