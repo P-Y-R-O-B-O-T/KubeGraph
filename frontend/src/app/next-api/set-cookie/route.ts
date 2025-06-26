@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   response.cookies.set('authToken', token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     path: '/',
     maxAge: 60 * 60 * 24, // 1 day
   });
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   response.cookies.set('username', username, {
     // httpOnly omitted, so JS can access
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'strict',
     path: '/',
     maxAge: 60 * 60 * 24, // 1 day
   });

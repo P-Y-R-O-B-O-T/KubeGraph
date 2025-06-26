@@ -47,7 +47,7 @@ const SampleLanding: React.FC = () => {
           />
           <h1 className="text-3xl font-thin">KubeGraph</h1>
         </div>
-        <h2 className="text-2xl font-semibold mb-4 text-center">Sample Landing</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-center">Sample KubeGraph Landing</h2>
         <h2 className="text-2xl font-semibold mb-4 text-center">{username}</h2>
         <div className="flex items-center justify-center mt-4">
           <Button type="button" onClick={handleLogout}>
