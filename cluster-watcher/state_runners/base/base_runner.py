@@ -9,7 +9,8 @@ import traceback
 
 import constants.constants as CONSTANTS
 import kubeconfig_utils.utils as KUBECONFIG_UTILS
-
+from MonitoringMessage.Message import MonitoringMessage
+from  api_connector.connector import APIConnector
 
 class BASE_RUNNER:
     def __init__(self, api_object_class, name: str) -> None:
@@ -21,6 +22,7 @@ class BASE_RUNNER:
         )
 
         self.API_OBJECT_CLASS = api_object_class
+        self.STACK_API_CONNECTOR = APIConnector()
         self.NAME = name
 
     def load_clients(self) -> None:
@@ -63,10 +65,22 @@ class BASE_RUNNER:
                     
                     obj = event["object"].to_dict()
                     event_type = event["type"]
-
                     metadata = obj.get("metadata", {})
                     name = metadata.get("name")
-                    self.RICH_CONSOLE.print(f"{obj}")
+                    namespace = metadata.get("namespace", "default")
+
+                    msg = MonitoringMessage(
+                    cluster_name=cluster_name,
+                    resource_name=name,
+                    namespace=namespace,
+                    action=event_type,
+                    timestamp=datetime.utcnow(),
+                    data=obj,
+
+                )
+                    
+                    self.STACK_API_CONNECTOR.push_updates(cluster_name=cluster_name, resource_type=self.NAME, data=msg)
+                 
                     self.RICH_CONSOLE.print(f"[{cluster_name}] {event_type}: [bold green]{name}[/bold green]")
 
 

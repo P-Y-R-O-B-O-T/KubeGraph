@@ -11,9 +11,10 @@ from notifier.schemas import EventData
 
 NOTIFIER_ROUTER=APIRouter(prefix="/notifier",tags=["notifier"])
 
-@NOTIFIER_ROUTER.get("/events")
+@NOTIFIER_ROUTER.get("/events") ## this could be called by frontend.
 async def sse_events(
     request:Request,
+    current_user: Annotated[User, Depends(get_current_active_user)],
     event_type:Optional[str]=Query(None),
     event_id:Optional[str]=Query(None),
 ):
@@ -34,9 +35,10 @@ async def sse_events(
     return StreamingResponse(event_stream(),media_type="text/event-stream")
 
     
-@NOTIFIER_ROUTER.post("/update")
+@NOTIFIER_ROUTER.post("/update") # this would be called by the cluster watcher 
 async def notify_client(
     payload:EventData,
+    # current_user: Annotated[User, Depends(get_current_active_user)],
 ):
     await push_to_subscribers(payload)
     return {"status": "notified", "notified_at": payload.timestamp.isoformat()}

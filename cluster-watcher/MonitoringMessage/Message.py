@@ -10,7 +10,7 @@ import json
 class MonitoringMessage:
     cluster_name:str
     resource_name:str
-    namespace:Optional[str]
+    namespace:Optional[str] 
     action:str ## Created Modified Deleted.
     timestamp:datetime
     data:Dict[str,Any]
