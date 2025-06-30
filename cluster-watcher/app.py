@@ -1,41 +1,71 @@
-
 import asyncio
 import time
 
 from state_runners.CoreV1Api.runners import (
-    POD_RUNNER, NAMESPACE_RUNNER, CONFIGMAP_RUNNER, COMPONENT_STATUS_RUNNER,
-    ENDPOINT_RUNNER, EVENT_RUNNER, LIMIT_RANGE_RUNNER, NODE_RUNNER, PVC_RUNNER,
-    PV_RUNNER, POD_TEMPLATE_RUNNER, REPLICATION_CONTROLLER_RUNNER, RESOURCE_QUOTA_RUNNER,
-    SECRET_RUNNER, SERVICE_ACCOUNT_RUNNER, SERVICE_RUNNER,
+    POD_RUNNER,
+    NAMESPACE_RUNNER,
+    CONFIGMAP_RUNNER,
+    COMPONENT_STATUS_RUNNER,
+    ENDPOINT_RUNNER,
+    EVENT_RUNNER,
+    LIMIT_RANGE_RUNNER,
+    NODE_RUNNER,
+    PVC_RUNNER,
+    PV_RUNNER,
+    POD_TEMPLATE_RUNNER,
+    REPLICATION_CONTROLLER_RUNNER,
+    RESOURCE_QUOTA_RUNNER,
+    SECRET_RUNNER,
+    SERVICE_ACCOUNT_RUNNER,
+    SERVICE_RUNNER,
 )
 from state_runners.AdmissionregistrationV1Api.runners import (
-    MUTATING_WEBHOOK_CONFIG_RUNNER, VALIDATING_ADMISSION_POLICY_RUNNER,
-    VALIDATING_ADMISSION_POLICY_BINDING_RUNNER, VALIDATING_WEBHOOK_CONFIG_RUNNER,
+    MUTATING_WEBHOOK_CONFIG_RUNNER,
+    VALIDATING_ADMISSION_POLICY_RUNNER,
+    VALIDATING_ADMISSION_POLICY_BINDING_RUNNER,
+    VALIDATING_WEBHOOK_CONFIG_RUNNER,
 )
 from state_runners.ApiextensionsV1Api.runners import CUSTOM_RESOURCE_DEFINITION_RUNNER
 from state_runners.ApiregistrationV1Api.runners import API_SERVICE_RUNNER
 from state_runners.AppsV1Api.runners import (
-    CONTROLLER_VERSION_RUNNER, DAEMONSET_RUNNER, DEPLOYMENT_RUNNER,
-    REPLICASET_RUNNER, STATEFULSET_RUNNER,
+    CONTROLLER_VERSION_RUNNER,
+    DAEMONSET_RUNNER,
+    DEPLOYMENT_RUNNER,
+    REPLICASET_RUNNER,
+    STATEFULSET_RUNNER,
 )
 from state_runners.AutoscalingV2Api.runners import HPA_RUNNER
 from state_runners.BatchV1Api.runners import JOB_RUNNER, CRON_JOB_RUNNER
 from state_runners.CertificatesV1Api.runners import CSR_RUNNER
 from state_runners.DiscoveryV1Api.runners import ENDPOINT_SLICE_RUNNER
-from state_runners.FlowcontrolApiserverV1Api.runners import FLOW_SCHEMA_RUNNER, PRIORITY_LEVEL_CONFIG_RUNNER
+from state_runners.FlowcontrolApiserverV1Api.runners import (
+    FLOW_SCHEMA_RUNNER,
+    PRIORITY_LEVEL_CONFIG_RUNNER,
+)
 from state_runners.NetworkingV1Api.runners import (
-    INGRESS_CLASS_RUNNER, INGRESS_RUNNER, IP_ADDRESSE_RUNNER, NETWORK_POLICY_RUNNER, SERVICE_CIRD_RUNNER
+    INGRESS_CLASS_RUNNER,
+    INGRESS_RUNNER,
+    IP_ADDRESSE_RUNNER,
+    NETWORK_POLICY_RUNNER,
+    SERVICE_CIRD_RUNNER,
 )
 from state_runners.NodeV1Api.runners import RUNTIME_CLASS_RUNNER
 from state_runners.PolicyV1Api.runners import POD_DISRUPTION_BUDGET_RUNNER
 from state_runners.RbacAuthorizationV1Api.runners import (
-    CLUSTER_ROLE_RUNNER, CLUSTER_ROLE_BINDINGS_RUNNER, ROLE_BINDING_RUNNER, ROLE_RUNNER
+    CLUSTER_ROLE_RUNNER,
+    CLUSTER_ROLE_BINDINGS_RUNNER,
+    ROLE_BINDING_RUNNER,
+    ROLE_RUNNER,
 )
 from state_runners.SchedulingV1Api.runners import PRIORITY_CLASS_RUNNER
 from state_runners.StorageV1Api.runners import (
-    CSI_DRIVER_RUNNER, CSI_NODE_RUNNER, CSI_STORAGE_CAPACITY_RUNNER,
-    STORAGE_CLASS_RUNNER, VOLUME_ATTACHMENT_RUNNER,
+    CSI_DRIVER_RUNNER,
+    CSI_NODE_RUNNER,
+    CSI_STORAGE_CAPACITY_RUNNER,
+    STORAGE_CLASS_RUNNER,
+    VOLUME_ATTACHMENT_RUNNER,
 )
+
 
 class APP:
     def __init__(self) -> None:
@@ -104,10 +134,12 @@ class APP:
                 print(f"[ERROR] {name}: {e}")
 
     async def run(self) -> None:
-        await asyncio.gather(*[
-            self.limited_run(name, runner)
-            for name, runner in self.STATE_OBJECTS.items()
-        ])
+        await asyncio.gather(
+            *[
+                self.limited_run(name, runner)
+                for name, runner in self.STATE_OBJECTS.items()
+            ]
+        )
 
 
 if __name__ == "__main__":

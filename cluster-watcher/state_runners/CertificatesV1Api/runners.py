@@ -1,6 +1,5 @@
 from state_runners.base.base_runner import BASE_RUNNER
-
-from kubernetes import client,watch
+from kubernetes import client
 
 
 class CertificatesV1Api_RUNNER(BASE_RUNNER):
@@ -13,6 +12,6 @@ class CSR_RUNNER(CertificatesV1Api_RUNNER):
         super().__init__("CertificatesV1Api_CSRS")
 
     def fetch_state(self, _):
-        w=watch.Watch()
-        return w.stream(self.CLIENTS[_].list_certificate_signing_request,timeout_seconds=0)
-
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_certificate_signing_request, timeout_seconds=0
+        )

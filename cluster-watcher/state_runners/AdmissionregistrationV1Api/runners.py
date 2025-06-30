@@ -1,6 +1,5 @@
-
 from state_runners.base.base_runner import BASE_RUNNER
-from kubernetes import client, watch
+from kubernetes import client
 
 
 class AdmissionregistrationV1Api_RUNNER(BASE_RUNNER):
@@ -13,8 +12,9 @@ class MUTATING_WEBHOOK_CONFIG_RUNNER(AdmissionregistrationV1Api_RUNNER):
         super().__init__("AdmissionregistrationV1Api_MUTATING_WEBHOOK_CONFIGS")
 
     def fetch_state(self, _):
-        w = watch.Watch()
-        return w.stream(self.CLIENTS[_].list_mutating_webhook_configuration, timeout_seconds=0)
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_mutating_webhook_configuration, timeout_seconds=0
+        )
 
 
 # ❌ Watch not supported for ValidatingAdmissionPolicy
@@ -46,5 +46,6 @@ class VALIDATING_WEBHOOK_CONFIG_RUNNER(AdmissionregistrationV1Api_RUNNER):
         super().__init__("AdmissionregistrationV1Api_VALIDATING_WEBHOOK_CONFIGS")
 
     def fetch_state(self, _):
-        w = watch.Watch()
-        return w.stream(self.CLIENTS[_].list_validating_webhook_configuration, timeout_seconds=0)
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_validating_webhook_configuration, timeout_seconds=0
+        )

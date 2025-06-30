@@ -1,6 +1,6 @@
 from state_runners.base.base_runner import BASE_RUNNER
+from kubernetes import client
 
-from kubernetes import client,watch
 
 class PolicyV1Api_RUNNER(BASE_RUNNER):
     def __init__(self, name) -> None:
@@ -12,5 +12,7 @@ class POD_DISRUPTION_BUDGET_RUNNER(PolicyV1Api_RUNNER):
         super().__init__("PolicyV1Api_POD_DISRUPTION_BUDGETS")
 
     def fetch_state(self, _):
-        w=watch.Watch()
-        return w.stream(self.CLIENTS[_].list_pod_disruption_budget_for_all_namespaces,timeout_second=0)
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_pod_disruption_budget_for_all_namespaces,
+            timeout_second=0,
+        )

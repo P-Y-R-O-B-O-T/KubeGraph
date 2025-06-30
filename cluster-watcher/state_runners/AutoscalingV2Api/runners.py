@@ -1,6 +1,5 @@
 from state_runners.base.base_runner import BASE_RUNNER
-
-from kubernetes import client,watch
+from kubernetes import client
 
 
 class AutoscalingV2Api_RUNNER(BASE_RUNNER):
@@ -13,6 +12,7 @@ class HPA_RUNNER(AutoscalingV2Api_RUNNER):
         super().__init__("AutoscalingV2Api_HPAS")
 
     def fetch_state(self, _):
-        w=watch.Watch()
-        return w.stream(self.CLIENTS[_].list_horizontal_pod_autoscaler_for_all_namespaces,timeout_seconds=0)
-
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_horizontal_pod_autoscaler_for_all_namespaces,
+            timeout_seconds=0,
+        )

@@ -1,6 +1,5 @@
 from state_runners.base.base_runner import BASE_RUNNER
-
-from kubernetes import client,watch
+from kubernetes import client
 
 
 class DiscoveryV1Api_RUNNER(BASE_RUNNER):
@@ -13,6 +12,6 @@ class ENDPOINT_SLICE_RUNNER(DiscoveryV1Api_RUNNER):
         super().__init__("DiscoveryV1Api_ENDPOINT_SLICES")
 
     def fetch_state(self, _):
-        w=watch.Watch()
-        return w.stream(self.CLIENTS[_].list_endpoint_slice_for_all_namespaces,timeout_seconds=0)
-    
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_endpoint_slice_for_all_namespaces, timeout_seconds=0
+        )

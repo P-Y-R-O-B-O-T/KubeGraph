@@ -1,6 +1,5 @@
 from state_runners.base.base_runner import BASE_RUNNER
-
-from kubernetes import client,watch
+from kubernetes import client
 
 
 class ApiregistrationV1Api_RUNNER(BASE_RUNNER):
@@ -13,6 +12,4 @@ class API_SERVICE_RUNNER(ApiregistrationV1Api_RUNNER):
         super().__init__("ApiregistrationV1Api_API_SERVICES")
 
     def fetch_state(self, _):
-        w=watch.Watch()
-        return w.stream(self.CLIENTS[_].list_api_service,timeout_seconds=0)
-
+        return self.WATCHERS[_].stream(self.CLIENTS[_].list_api_service, timeout_seconds=0)

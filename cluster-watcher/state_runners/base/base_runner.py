@@ -7,10 +7,13 @@ import time
 from datetime import datetime
 import traceback
 
+from kubernetes import watch
+
 import constants.constants as CONSTANTS
 import kubeconfig_utils.utils as KUBECONFIG_UTILS
 from MonitoringMessage.Message import MonitoringMessage
-from  api_connector.connector import APIConnector
+from api_connector.connector import APIConnector
+
 
 class BASE_RUNNER:
     def __init__(self, api_object_class, name: str) -> None:
@@ -52,17 +55,116 @@ class BASE_RUNNER:
             self.FILES.remove(_)
         self.RICH_CONSOLE.print(f"Loaded files {self.NAME}")
 
-    async def watch_cluster(self, cluster_name: str, fetch_state):
+    # async def watch_cluster(self, cluster_name: str, fetch_state):
+    #     while True:
+    #         try:
+    #             self.RICH_CONSOLE.log(
+    #                 f"[khaki1]Starting watch[/ khaki1] for [slate_blue1]{cluster_name}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+    #             )
+    #
+    #             events = await asyncio.to_thread(fetch_state, cluster_name)
+    #
+    #             for event in events:
+    #
+    #                 obj = event["object"].to_dict()
+    #                 event_type = event["type"]
+    #                 metadata = obj.get("metadata", {})
+    #                 name = metadata.get("name")
+    #                 namespace = metadata.get("namespace", "default")
+    #
+    #                 msg = MonitoringMessage(
+    #                     cluster_name=cluster_name,
+    #                     resource_name=name,
+    #                     namespace=namespace,
+    #                     action=event_type,
+    #                     timestamp=datetime.utcnow(),
+    #                     data=obj,
+    #                 )
+    #
+    #                 self.STACK_API_CONNECTOR.push_updates(
+    #                     cluster_name=cluster_name, resource_type=self.NAME, data=msg
+    #                 )
+    #
+    #                 self.RICH_CONSOLE.print(
+    #                     f"[{cluster_name}] {event_type}: [bold green]{name}[/bold green]"
+    #                 )
+    #
+    #         except Exception as e:
+    #             self.RICH_CONSOLE.log(
+    #                 f"[deep_pink3]Error[/ deep_pink3] watching [slate_blue1]{cluster_name}[/ slate_blue1]: {e}"
+    #             )
+    #             self.RICH_CONSOLE.log(traceback.format_exc())
+    #             await asyncio.sleep(2)
+    #
+    # async def run(self) -> None:
+    #     while True:
+    #         self.load_clients()
+    #         await asyncio.sleep(2)
+    #
+    #         while True:
+    #             tasks = []
+    #
+    #             for _ in self.CLIENTS:
+    #                 DATA = {}
+    #
+    #                 self.RICH_CONSOLE.log(
+    #                     f"[khaki1]Fetching[/ khaki1] [slate_blue1]{_[:_.find('.')]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+    #                 )
+    #                 start_time = time.time()
+    #
+    #                 try:
+    #                     ## create a task that can be run in parallel.
+    #                     task = asyncio.create_task(
+    #                         self.watch_cluster(_, self.fetch_state)
+    #                     )
+    #                     tasks.append(task)
+    #
+    #                     await asyncio.gather(*tasks)
+    #                     self.RICH_CONSOLE.log(
+    #                         f"[spring_green1]Fetched[/ spring_green1]  [slate_blue1]{_[:_.find('.')]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"
+    #                     )
+    #                 except:
+    #                     self.RICH_CONSOLE.log(
+    #                         f"[deep_pink3]Error[/ deep_pink3] fetching [slate_blue1]{_[:_.find('.')]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+    #                     )
+    #                     self.RICH_CONSOLE.log(traceback.format_exc())
+    #
+    #             if self.need_file_reload():
+    #                 break
+    #             await asyncio.sleep(10)
+
+    async def run_new(self) -> None:
         while True:
+            self.load_clients()
+            self.create_watchers()
+            await asyncio.sleep(2)
+
+            while True:
+                start_time = time.time()
+
+                try:
+                    await self.watch_clusters()
+
+                    self.RICH_CONSOLE.log(
+                        f"[spring_green1]Watched[/ spring_green1] [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"
+                    )
+                except:
+                    self.RICH_CONSOLE.log(
+                        f"[deep_pink3]Error[/ deep_pink3] watching [light_salmon1]{self.NAME}[/ light_salmon1]"
+                    )
+                    self.RICH_CONSOLE.log(traceback.format_exc())
+
+                if self.need_file_reload():
+                    break
+                await asyncio.sleep(10)
+    
+
+    async def watch_clusters(self):
+        for _ in self.CLIENTS:
             try:
-                self.RICH_CONSOLE.log(
-                    f"[khaki1]Starting watch[/ khaki1] for [slate_blue1]{cluster_name}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
-                )
-
-                events = await asyncio.to_thread(fetch_state, cluster_name)
-
+                events = self.fetch_state(_)
                 for event in events:
-                    
+
                     obj = event["object"].to_dict()
                     event_type = event["type"]
                     metadata = obj.get("metadata", {})
@@ -70,61 +172,76 @@ class BASE_RUNNER:
                     namespace = metadata.get("namespace", "default")
 
                     msg = MonitoringMessage(
-                    cluster_name=cluster_name,
-                    resource_name=name,
-                    namespace=namespace,
-                    action=event_type,
-                    timestamp=datetime.utcnow(),
-                    data=obj,
+                        cluster_name=_,
+                        resource_name=name,
+                        namespace=namespace,
+                        action=event_type,
+                        timestamp=datetime.utcnow(),
+                        data=obj,
+                    )
 
-                )
-                    
-                    self.STACK_API_CONNECTOR.push_updates(cluster_name=cluster_name, resource_type=self.NAME, data=msg)
-                 
-                    self.RICH_CONSOLE.print(f"[{cluster_name}] {event_type}: [bold green]{name}[/bold green]")
+                    self.STACK_API_CONNECTOR.push_updates(
+                        cluster_name=_, resource_type=self.NAME, data=msg
+                    )
 
-
+                    self.RICH_CONSOLE.print(
+                        f"[{_}] {event_type}: [bold green]{name}[/bold green]"
+                    )
             except Exception as e:
                 self.RICH_CONSOLE.log(
-                    f"[deep_pink3]Error[/ deep_pink3] watching [slate_blue1]{cluster_name}[/ slate_blue1]: {e}"
+                    f"[deep_pink3]Error[/ deep_pink3] watching [slate_blue1]{_}[/ slate_blue1]: {e}"
                 )
                 self.RICH_CONSOLE.log(traceback.format_exc())
-                await asyncio.sleep(2)
 
-    async def run(self) -> None:
-        while True:
-            self.load_clients()
-            await asyncio.sleep(2)
+    # async def watch_cluster_new(self, cluster_name: str):
+    #     while True:
+    #         try:
+    #             self.RICH_CONSOLE.log(
+    #                 f"[khaki1]Starting watch[/ khaki1] for [slate_blue1]{cluster_name}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+    #             )
+    #
+    #             events = self.fetch_state(cluster_name)
+    #
+    #             for event in events:
+    #
+    #                 obj = event["object"].to_dict()
+    #                 event_type = event["type"]
+    #                 metadata = obj.get("metadata", {})
+    #                 name = metadata.get("name")
+    #                 namespace = metadata.get("namespace", "default")
+    #
+    #                 msg = MonitoringMessage(
+    #                     cluster_name=cluster_name,
+    #                     resource_name=name,
+    #                     namespace=namespace,
+    #                     action=event_type,
+    #                     timestamp=datetime.utcnow(),
+    #                     data=obj,
+    #                 )
+    #
+    #                 self.STACK_API_CONNECTOR.push_updates(
+    #                     cluster_name=cluster_name, resource_type=self.NAME, data=msg
+    #                 )
+    #
+    #                 self.RICH_CONSOLE.print(
+    #                     f"[{cluster_name}] {event_type}: [bold green]{name}[/bold green]"
+    #                 )
+    #
+    #         except Exception as e:
+    #             self.RICH_CONSOLE.log(
+    #                 f"[deep_pink3]Error[/ deep_pink3] watching [slate_blue1]{cluster_name}[/ slate_blue1]: {e}"
+    #             )
+    #             self.RICH_CONSOLE.log(traceback.format_exc())
+    #             await asyncio.sleep(2)
 
-            while True:
-                tasks = []  
 
-                for _ in self.CLIENTS:
-                    DATA = {}
+    def create_watcher(self, cluster: str) -> None:
+        self.WATCHERS[cluster] = watch.Watch()
 
-                    self.RICH_CONSOLE.log(
-                        f"[khaki1]Fetching[/ khaki1] [slate_blue1]{_[:_.find('.')]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
-                    )
-                    start_time = time.time()
-
-                    try:
-                        ## create a task that can be run in parallel.
-                        task = asyncio.create_task(self.watch_cluster(_, self.fetch_state))
-                        tasks.append(task)
-
-                        await asyncio.gather(*tasks)
-                        self.RICH_CONSOLE.log(
-                            f"[spring_green1]Fetched[/ spring_green1]  [slate_blue1]{_[:_.find('.')]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"
-                        )
-                    except:
-                        self.RICH_CONSOLE.log(
-                            f"[deep_pink3]Error[/ deep_pink3] fetching [slate_blue1]{_[:_.find('.')]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
-                        )
-                        self.RICH_CONSOLE.log(traceback.format_exc())
-
-                if self.need_file_reload():
-                    break
-                await asyncio.sleep(10)
+    def create_watchers(self) -> None:
+        self.WATCHERS = {}
+        for _ in self.CLIENTS:
+            self.create_watcher(_)
 
     def structure_data(self, DATA, fetched: dict) -> None:
         for _ in fetched["items"]:
@@ -139,4 +256,3 @@ class BASE_RUNNER:
     @abstractmethod
     def fetch_state(self, _):
         raise NotImplementedError("Subclasses must implement fetch_state")
-

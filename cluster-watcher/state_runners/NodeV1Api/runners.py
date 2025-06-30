@@ -1,6 +1,6 @@
 from state_runners.base.base_runner import BASE_RUNNER
+from kubernetes import client
 
-from kubernetes import client,watch
 
 class NodeV1Api_RUNNER(BASE_RUNNER):
     def __init__(self, name) -> None:
@@ -12,6 +12,6 @@ class RUNTIME_CLASS_RUNNER(NodeV1Api_RUNNER):
         super().__init__("NodeV1Api_RUNTIME_CLASSES")
 
     def fetch_state(self, _):
-        w=watch.Watch()
-        return w.stream(self.CLIENTS[_].list_runtime_class,timeout_seconds=0)
-
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_runtime_class, timeout_seconds=0
+        )
