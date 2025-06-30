@@ -133,7 +133,7 @@ class BASE_RUNNER:
     #                 break
     #             await asyncio.sleep(10)
 
-    async def run_new(self) -> None:
+    async def run(self) -> None:
         while True:
             self.load_clients()
             self.create_watchers()
@@ -154,6 +154,7 @@ class BASE_RUNNER:
                     )
                     self.RICH_CONSOLE.log(traceback.format_exc())
 
+                await asyncio.sleep(2)
                 if self.need_file_reload():
                     break
                 await asyncio.sleep(10)
