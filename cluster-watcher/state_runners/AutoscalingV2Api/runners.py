@@ -14,5 +14,7 @@ class HPA_RUNNER(AutoscalingV2Api_RUNNER):
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_horizontal_pod_autoscaler_for_all_namespaces,
-            timeout_seconds=0,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )

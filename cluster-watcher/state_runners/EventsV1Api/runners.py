@@ -13,5 +13,8 @@ class EVENTS_RUNNER(EventsV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_event_for_all_namespaces, timeout_seconds=0
+            self.CLIENTS[_].list_event_for_all_namespaces,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )

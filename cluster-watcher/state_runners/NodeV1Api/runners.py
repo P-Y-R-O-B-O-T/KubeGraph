@@ -13,5 +13,8 @@ class RUNTIME_CLASS_RUNNER(NodeV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_runtime_class, timeout_seconds=0
+            self.CLIENTS[_].list_runtime_class,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )

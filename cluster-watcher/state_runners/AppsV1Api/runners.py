@@ -24,7 +24,10 @@ class DAEMONSET_RUNNER(AppsV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_daemon_set_for_all_namespaces, timeout_seconds=0
+            self.CLIENTS[_].list_daemon_set_for_all_namespaces,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )
 
 
@@ -34,7 +37,10 @@ class DEPLOYMENT_RUNNER(AppsV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_deployment_for_all_namespaces, timeout_seconds=0
+            self.CLIENTS[_].list_deployment_for_all_namespaces,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )
 
 
@@ -44,7 +50,10 @@ class REPLICASET_RUNNER(AppsV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_replica_set_for_all_namespaces, timeout_seconds=0
+            self.CLIENTS[_].list_replica_set_for_all_namespaces,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )
 
 
@@ -54,5 +63,8 @@ class STATEFULSET_RUNNER(AppsV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_stateful_set_for_all_namespaces, timeout_seconds=0
+            self.CLIENTS[_].list_stateful_set_for_all_namespaces,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )

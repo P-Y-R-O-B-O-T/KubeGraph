@@ -14,5 +14,7 @@ class POD_DISRUPTION_BUDGET_RUNNER(PolicyV1Api_RUNNER):
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_pod_disruption_budget_for_all_namespaces,
-            timeout_second=0,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )

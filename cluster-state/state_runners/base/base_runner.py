@@ -79,13 +79,17 @@ class BASE_RUNNER:
                         self.RICH_CONSOLE.log(
                             f"[khaki1]Fetching[/ khaki1] [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
                         )
-                        fetched = self.fetch_state(_) # await asyncio.to_thread(self.fetch_state, _)
+                        fetched = self.fetch_state(
+                            _
+                        )  # await asyncio.to_thread(self.fetch_state, _)
                         self.RICH_CONSOLE.log(
                             f"[spring_green1]Fetched[/ spring_green1]  [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"
                         )
 
                         structured_data = self.structure_data(fetched.to_dict())
-                        self.STACK_API_CONNECTOR.upload_data(_, self.NAME, structured_data)
+                        self.STACK_API_CONNECTOR.upload_data(
+                            _, self.NAME, structured_data
+                        )
 
                     except:
                         self.RICH_CONSOLE.log(

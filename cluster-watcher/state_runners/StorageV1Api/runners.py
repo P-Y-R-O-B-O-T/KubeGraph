@@ -12,7 +12,12 @@ class CSI_DRIVER_RUNNER(StorageV1Api_RUNNER):
         super().__init__("StorageV1Api_CSI_DRIVERS")
 
     def fetch_state(self, _):
-        return self.WATCHERS[_].stream(self.CLIENTS[_].list_csi_driver, timeout_seconds=0)
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_csi_driver,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
+        )
 
 
 class CSI_NODE_RUNNER(StorageV1Api_RUNNER):
@@ -20,7 +25,12 @@ class CSI_NODE_RUNNER(StorageV1Api_RUNNER):
         super().__init__("StorageV1Api_CSI_NODES")
 
     def fetch_state(self, _):
-        return self.WATCHERS[_].stream(self.CLIENTS[_].list_csi_node, timeout_seconds=0)
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_csi_node,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
+        )
 
 
 class CSI_STORAGE_CAPACITY_RUNNER(StorageV1Api_RUNNER):
@@ -30,7 +40,9 @@ class CSI_STORAGE_CAPACITY_RUNNER(StorageV1Api_RUNNER):
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_csi_storage_capacity_for_all_namespaces,
-            timeout_seconds=0,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )
 
 
@@ -40,7 +52,10 @@ class STORAGE_CLASS_RUNNER(StorageV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_storage_class, timeout_seconds=0
+            self.CLIENTS[_].list_storage_class,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )
 
 
@@ -50,5 +65,8 @@ class VOLUME_ATTACHMENT_RUNNER(StorageV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_volume_attachment, timeout_seconds=0
+            self.CLIENTS[_].list_volume_attachment,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )

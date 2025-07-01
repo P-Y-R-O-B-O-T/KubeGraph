@@ -12,7 +12,12 @@ class CLUSTER_ROLE_RUNNER(RbacAuthorizationV1Api_RUNNER):
         super().__init__("RbacAuthorizationV1Api_CLUSTER_ROLES")
 
     def fetch_state(self, _):
-        return self.WATCHERS[_].stream(self.CLIENTS[_].list_cluster_role, timeout_seconds=0)
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_cluster_role,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
+        )
 
 
 class CLUSTER_ROLE_BINDINGS_RUNNER(RbacAuthorizationV1Api_RUNNER):
@@ -21,7 +26,10 @@ class CLUSTER_ROLE_BINDINGS_RUNNER(RbacAuthorizationV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_cluster_role_binding, timeout_seconds=0
+            self.CLIENTS[_].list_cluster_role_binding,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )
 
 
@@ -31,7 +39,10 @@ class ROLE_BINDING_RUNNER(RbacAuthorizationV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_role_binding_for_all_namespaces, timeout_seconds=0
+            self.CLIENTS[_].list_role_binding_for_all_namespaces,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )
 
 
@@ -41,5 +52,8 @@ class ROLE_RUNNER(RbacAuthorizationV1Api_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_role_for_all_namespaces, timeout_seconds=0
+            self.CLIENTS[_].list_role_for_all_namespaces,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )

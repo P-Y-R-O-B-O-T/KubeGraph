@@ -13,7 +13,10 @@ class CLUSTER_CUSTOM_OBJECT_RUNNER(CustomObjectsApi_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_cluster_custom_object, timeout_seconds=0
+            self.CLIENTS[_].list_cluster_custom_object,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )
 
 
@@ -23,5 +26,8 @@ class CUSTOM_OBJECTS_RUNNER(CustomObjectsApi_RUNNER):
 
     def fetch_state(self, _):
         return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_custom_object_for_all_namespaces, timeout_seconds=0
+            self.CLIENTS[_].list_custom_object_for_all_namespaces,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=self.LATEST_RESOURCE_VERSION,
         )

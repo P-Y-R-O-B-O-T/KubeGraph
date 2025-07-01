@@ -48,7 +48,7 @@ class APIConnector:
         )
 
     def push_updates(
-        self, cluster_name: str, resource_type: str, data: MonitoringMessage
+        self, cluster_name: str, resource_type: str, data: dict, event_type: str
     ) -> None:
         if self.TOKEN is None:
             self.get_token(resource_type)
@@ -56,12 +56,13 @@ class APIConnector:
             self.RICH_CONSOLE.log(
                 f"[khaki1]Updating[/ khaki1] [slate_blue1]{cluster_name}[/ slate_blue1] | [light_salmon1]{resource_type}[/ light_salmon1] to STACK API"
             )
-            response = httpx.post(
+            response = httpx.put(
                 f"{self.BASE_URL}/cluster/data",
                 json={
                     "cluster_name": cluster_name,
                     "resource_type": resource_type,
-                    "cluster_data": data.to_dict(),
+                    "event_type": event_type,
+                    "cluster_data": data,
                 },
                 headers={"Authorization": f"Bearer {self.TOKEN}"},
             )
