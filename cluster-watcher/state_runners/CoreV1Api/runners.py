@@ -23,7 +23,6 @@ class POD_RUNNER(CoreV1Api_RUNNER):
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_pod_for_all_namespaces,
             timeout_seconds=5,
-            watch=True,
             allow_watch_bookmarks=True,
             resource_version=self.LATEST_RESOURCE_VERSION,
          
