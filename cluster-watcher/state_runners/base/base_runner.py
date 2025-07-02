@@ -13,6 +13,7 @@ from kubernetes import watch
 import constants.constants as CONSTANTS
 import kubeconfig_utils.utils as KUBECONFIG_UTILS
 from api_connector.connector import APIConnector
+from kubernetes.client.exceptions import ApiException,ApiTypeError,ApiValueError
 
 
 class BASE_RUNNER:
@@ -82,7 +83,7 @@ class BASE_RUNNER:
 
                 if self.need_file_reload():
                     break
-                await asyncio.sleep(5)
+                await asyncio.sleep(1)
 
     async def watch_clusters(self):
         tasks = {}
@@ -97,15 +98,16 @@ class BASE_RUNNER:
                 f"[khaki1]Watching[/ khaki1] [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
             )
             events = self.fetch_state(_)
-            time.sleep(5)
             for event in events:
                 event_type = event["type"]
 
-                self.LATEST_RESOURCE_VERSION = event["object"]["metadata"][
-                    "resourceVersion"
-                ]
+              
                 if event_type == "BOOKMARK":
-                    continue
+                    print("bookmark",event["object"]["metadata"]["resourceVersion"],_,self.NAME)
+                    self.LATEST_RESOURCE_VERSION = event["object"]["metadata"][
+                    'resourceVersion'
+                ]
+                    break
 
                 obj = event["object"].to_dict()
                 data = self.convert_datetimes_to_strings(obj)
@@ -118,11 +120,31 @@ class BASE_RUNNER:
                 # )
 
                 self.RICH_CONSOLE.print(
-                    f"[{_}] {event_type}: [bold green]{self.NAME}[/bold green]"
+                    f"{_} {event_type}: [bold green]{obj["metadata"]["name"]}[/bold green] Name:{self.NAME}"
                 )
+            # self.RICH_CONSOLE.log(
+            #     f"[spring_green1]Watched[/ spring_green1] [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+            # )
+
+        except ApiException as e:
+            if e.status == 410:
+                self.RICH_CONSOLE.log("[red] Resouce version is old [/red]")
+                pod_list=self.CLIENTS[_].list_pod_for_all_namespaces()
+                self.LATEST_RESOURCE_VERSION=pod_list.metadata.resource_version
+            else:
+                self.RICH_CONSOLE.log(
+                    f"[deep_pink3]Kubernetes API error[/deep_pink3] for [slate_blue1]{_}[/slate_blue1]: {e}"
+                )
+                self.RICH_CONSOLE.log(traceback.format_exc())
+                time.sleep(1)
+                
+        except (ApiTypeError, ApiValueError) as e:
             self.RICH_CONSOLE.log(
-                f"[spring_green1]Watched[/ spring_green1] [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+                f"[yellow]API Client misuse[/yellow] for [slate_blue1]{_}[/slate_blue1]: {e}"
             )
+            self.RICH_CONSOLE.log(traceback.format_exc())
+            time.sleep(1)
+
         except Exception as e:
             self.RICH_CONSOLE.log(
                 f"[deep_pink3]Error[/ deep_pink3] watching [slate_blue1]{_}[/ slate_blue1]: {e}"
