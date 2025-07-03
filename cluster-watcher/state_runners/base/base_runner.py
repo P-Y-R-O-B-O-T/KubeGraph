@@ -81,14 +81,13 @@ class BASE_RUNNER:
 
                 if self.need_file_reload():
                     break
-                time.sleep(5)
+                time.sleep(1)
 
     def watch_clusters(self):
         threads = {}
         for _ in self.CLIENTS:
             threads[_] = threading.Thread(target=self.watch_cluster, args=(_,))
             threads[_].start()
-            # self.watch_cluster(_)
         for _ in threads:
             threads[_].join()
 
@@ -101,13 +100,9 @@ class BASE_RUNNER:
             for event in events:
                 event_type = event["type"]
 
-                # print(event)
                 if event_type == "BOOKMARK":
-                    print(
-                        "bookmark",
-                        event["object"]["metadata"]["resourceVersion"],
-                        _,
-                        self.NAME,
+                    self.RICH_CONSOLE.log(
+                        f"[gold1]BOOKMARK[/ gold1] for [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
                     )
                     self.LATEST_RESOURCE_VERSION[_] = event["object"]["metadata"][
                         "resourceVersion"
@@ -124,8 +119,8 @@ class BASE_RUNNER:
                 #     event_type=event_type,
                 # )
 
-                self.RICH_CONSOLE.print(
-                    f"{_} {event_type}: [bold green]{obj["metadata"]["name"]}[/bold green] Name:{self.NAME}"
+                self.RICH_CONSOLE.log(
+                    f"[yellow2]Watch {event_type}[/ yellow2]: [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] {obj["metadata"]["name"]} {self.NAME} "
                 )
             self.RICH_CONSOLE.log(
                 f"[spring_green1]Watched[/ spring_green1] [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
