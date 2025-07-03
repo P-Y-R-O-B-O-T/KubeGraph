@@ -33,19 +33,6 @@ class NAMESPACE_RUNNER(CoreV1Api_RUNNER):
         )
 
 
-class COMPONENT_STATUS_RUNNER(CoreV1Api_RUNNER):
-    def __init__(self) -> None:
-        super().__init__("CoreV1Api_COMPONENT_STATUSES")
-
-    def fetch_state(self, _):
-        return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_component_status,
-            timeout_seconds=5,
-            allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
-        )
-
-
 class CONFIGMAP_RUNNER(CoreV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("CoreV1Api_CONFIGMAPS")

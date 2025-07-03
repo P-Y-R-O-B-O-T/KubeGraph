@@ -101,6 +101,7 @@ class BASE_RUNNER:
             for event in events:
                 event_type = event["type"]
 
+                # print(event)
                 if event_type == "BOOKMARK":
                     print(
                         "bookmark",

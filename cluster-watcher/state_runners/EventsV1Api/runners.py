@@ -16,5 +16,7 @@ class EVENTS_RUNNER(EventsV1Api_RUNNER):
             self.CLIENTS[_].list_event_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
+            send_initial_events=True,
+            resource_version_match="NotOlderThan",
             resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
