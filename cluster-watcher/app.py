@@ -1,5 +1,4 @@
-import asyncio
-import time
+import threading
 
 from state_runners.CoreV1Api.runners import (
     POD_RUNNER,
@@ -69,8 +68,6 @@ from state_runners.StorageV1Api.runners import (
 
 class APP:
     def __init__(self) -> None:
-        self.concurrency_limit = 1000
-        self.semaphore = asyncio.Semaphore(self.concurrency_limit)
         self.STATE_OBJECTS = {
             "POD_RUNNER": POD_RUNNER(),
             "NAMESPACE": NAMESPACE_RUNNER(),
@@ -108,9 +105,9 @@ class APP:
             "PRIORITY_LEVEL_CONFIG_RUNNER": PRIORITY_LEVEL_CONFIG_RUNNER(),
             "INGRESS_CLASS_RUNNER": INGRESS_CLASS_RUNNER(),
             "INGRESS_RUNNER": INGRESS_RUNNER(),
-            "IP_ADDRESSE_RUNNER": IP_ADDRESSE_RUNNER(),
+            # "IP_ADDRESSE_RUNNER": IP_ADDRESSE_RUNNER(),
             "NETWORK_POLICY_RUNNER": NETWORK_POLICY_RUNNER(),
-            "SERVICE_CIRD_RUNNER": SERVICE_CIRD_RUNNER(),
+            # "SERVICE_CIRD_RUNNER": SERVICE_CIRD_RUNNER(),
             "RUNTIME_CLASS_RUNNER": RUNTIME_CLASS_RUNNER(),
             "POD_DISRUPTION_BUDGET_RUNNER": POD_DISRUPTION_BUDGET_RUNNER(),
             "CLUSTER_ROLE_RUNNER": CLUSTER_ROLE_RUNNER(),
@@ -119,31 +116,23 @@ class APP:
             "ROLE_RUNNER": ROLE_RUNNER(),
             "PRIORITY_CLASS_RUNNER": PRIORITY_CLASS_RUNNER(),
             "CSI_DRIVER_RUNNER": CSI_DRIVER_RUNNER(),
-            "CSI_NODE_RUNNER": CSI_NODE_RUNNER(),
+            # "CSI_NODE_RUNNER": CSI_NODE_RUNNER(),
             "CSI_STORAGE_CAPACITY_RUNNER": CSI_STORAGE_CAPACITY_RUNNER(),
             "STORAGE_CLASS_RUNNER": STORAGE_CLASS_RUNNER(),
             "VOLUME_ATTACHMENT_RUNNER": VOLUME_ATTACHMENT_RUNNER(),
         }
 
-    async def limited_run(self, name, runner):
-        async with self.semaphore:
-            try:
-                print(f"[STARTING] {name} at {time.strftime('%H:%M:%S')}")
-                await runner.run()
-            except Exception as e:
-                print(f"[ERROR] {name}: {e}")
+    def run_threaded(self) -> None:
+        threads = {}
+        for _ in self.STATE_OBJECTS:
+            threads[_] = threading.Thread(target=self.STATE_OBJECTS[_].run)
+            threads[_].start()
 
-    async def run(self) -> None:
-        await asyncio.gather(
-            *[
-                self.limited_run(name, runner)
-                for name, runner in self.STATE_OBJECTS.items()
-            ]
-        )
+        for _ in threads:
+            threads[_].join()
 
 
 if __name__ == "__main__":
     print("Starting all watchers with concurrency")
-    # We have limited the number of concurrent process accessing the kubernetest watch , else would panic .
-    app = APP()
-    asyncio.run(app.run())
+    APPLICATION = APP()
+    APPLICATION.run_threaded()

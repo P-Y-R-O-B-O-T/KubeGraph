@@ -16,7 +16,7 @@ class FLOW_SCHEMA_RUNNER(FlowcontrolApiserverV1Api_RUNNER):
             self.CLIENTS[_].list_flow_schema,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -29,5 +29,5 @@ class PRIORITY_LEVEL_CONFIG_RUNNER(FlowcontrolApiserverV1Api_RUNNER):
             self.CLIENTS[_].list_priority_level_configuration,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )

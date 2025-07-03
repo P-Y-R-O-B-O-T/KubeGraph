@@ -16,7 +16,7 @@ class INGRESS_CLASS_RUNNER(NetworkingV1Api_RUNNER):
             self.CLIENTS[_].list_ingress_class,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -29,7 +29,7 @@ class INGRESS_RUNNER(NetworkingV1Api_RUNNER):
             self.CLIENTS[_].list_ingress_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -42,7 +42,7 @@ class IP_ADDRESSE_RUNNER(NetworkingV1Api_RUNNER):
             self.CLIENTS[_].list_ip_address,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -55,7 +55,7 @@ class NETWORK_POLICY_RUNNER(NetworkingV1Api_RUNNER):
             self.CLIENTS[_].list_network_policy_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -68,5 +68,5 @@ class SERVICE_CIRD_RUNNER(NetworkingV1Api_RUNNER):
             self.CLIENTS[_].list_service_cidr,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )

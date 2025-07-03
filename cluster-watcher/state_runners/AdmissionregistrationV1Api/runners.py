@@ -16,7 +16,7 @@ class MUTATING_WEBHOOK_CONFIG_RUNNER(AdmissionregistrationV1Api_RUNNER):
             self.CLIENTS[_].list_mutating_webhook_configuration,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -53,5 +53,5 @@ class VALIDATING_WEBHOOK_CONFIG_RUNNER(AdmissionregistrationV1Api_RUNNER):
             self.CLIENTS[_].list_validating_webhook_configuration,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )

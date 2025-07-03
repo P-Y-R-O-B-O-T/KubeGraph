@@ -4,7 +4,6 @@ import time
 from rich.console import Console
 
 
-
 class APIConnector:
     def __init__(self) -> None:
         self.TOKEN = None

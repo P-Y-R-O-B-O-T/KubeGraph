@@ -16,7 +16,7 @@ class JOB_RUNNER(BatchV1Api_RUNNER):
             self.CLIENTS[_].list_job_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -29,5 +29,5 @@ class CRON_JOB_RUNNER(BatchV1Api_RUNNER):
             self.CLIENTS[_].list_cron_job_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )

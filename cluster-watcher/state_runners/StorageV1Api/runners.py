@@ -16,7 +16,7 @@ class CSI_DRIVER_RUNNER(StorageV1Api_RUNNER):
             self.CLIENTS[_].list_csi_driver,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -29,7 +29,7 @@ class CSI_NODE_RUNNER(StorageV1Api_RUNNER):
             self.CLIENTS[_].list_csi_node,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -42,7 +42,7 @@ class CSI_STORAGE_CAPACITY_RUNNER(StorageV1Api_RUNNER):
             self.CLIENTS[_].list_csi_storage_capacity_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -55,7 +55,7 @@ class STORAGE_CLASS_RUNNER(StorageV1Api_RUNNER):
             self.CLIENTS[_].list_storage_class,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -68,5 +68,5 @@ class VOLUME_ATTACHMENT_RUNNER(StorageV1Api_RUNNER):
             self.CLIENTS[_].list_volume_attachment,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )

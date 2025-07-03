@@ -16,5 +16,5 @@ class API_SERVICE_RUNNER(ApiregistrationV1Api_RUNNER):
             self.CLIENTS[_].list_api_service,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )

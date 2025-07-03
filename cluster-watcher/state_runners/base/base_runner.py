@@ -1,9 +1,8 @@
 from abc import abstractmethod
 from rich.console import Console
 from typing import Any
-import asyncio
 import os
-import sys
+import threading
 import time
 from datetime import datetime
 import traceback
@@ -13,7 +12,7 @@ from kubernetes import watch
 import constants.constants as CONSTANTS
 import kubeconfig_utils.utils as KUBECONFIG_UTILS
 from api_connector.connector import APIConnector
-from kubernetes.client.exceptions import ApiException,ApiTypeError,ApiValueError
+from kubernetes.client.exceptions import ApiException, ApiTypeError, ApiValueError
 
 
 class BASE_RUNNER:
@@ -25,7 +24,7 @@ class BASE_RUNNER:
             safe_box=False,
         )
 
-        self.LATEST_RESOURCE_VERSION = None
+        self.LATEST_RESOURCE_VERSION = {}
         self.API_OBJECT_CLASS = api_object_class
         self.STACK_API_CONNECTOR = APIConnector()
         self.NAME = name
@@ -57,11 +56,10 @@ class BASE_RUNNER:
             self.FILES.remove(_)
         self.RICH_CONSOLE.print(f"Loaded files {self.NAME}")
 
-    async def run(self) -> None:
+    def run(self) -> None:
         while True:
             self.load_clients()
             self.create_watchers()
-            await asyncio.sleep(2)
 
             while True:
                 start_time = time.time()
@@ -70,7 +68,7 @@ class BASE_RUNNER:
                     self.RICH_CONSOLE.log(
                         f"[khaki1]Watching[/ khaki1] [light_salmon1]{self.NAME}[/ light_salmon1]"
                     )
-                    await self.watch_clusters()
+                    self.watch_clusters()
 
                     self.RICH_CONSOLE.log(
                         f"[spring_green1]Watched[/ spring_green1] [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"
@@ -83,16 +81,18 @@ class BASE_RUNNER:
 
                 if self.need_file_reload():
                     break
-                await asyncio.sleep(1)
+                time.sleep(5)
 
-    async def watch_clusters(self):
-        tasks = {}
+    def watch_clusters(self):
+        threads = {}
         for _ in self.CLIENTS:
-            tasks[_] = await asyncio.to_thread(self.watch_cluster, _)
+            threads[_] = threading.Thread(target=self.watch_cluster, args=(_,))
+            threads[_].start()
+            # self.watch_cluster(_)
+        for _ in threads:
+            threads[_].join()
 
-        results = await asyncio.gather(*list(tasks.values()))
-
-    async def watch_cluster(self, _: str) -> None:
+    def watch_cluster(self, _: str) -> None:
         try:
             self.RICH_CONSOLE.log(
                 f"[khaki1]Watching[/ khaki1] [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
@@ -101,13 +101,17 @@ class BASE_RUNNER:
             for event in events:
                 event_type = event["type"]
 
-              
                 if event_type == "BOOKMARK":
-                    print("bookmark",event["object"]["metadata"]["resourceVersion"],_,self.NAME)
-                    self.LATEST_RESOURCE_VERSION = event["object"]["metadata"][
-                    'resourceVersion'
-                ]
-                    break
+                    print(
+                        "bookmark",
+                        event["object"]["metadata"]["resourceVersion"],
+                        _,
+                        self.NAME,
+                    )
+                    self.LATEST_RESOURCE_VERSION[_] = event["object"]["metadata"][
+                        "resourceVersion"
+                    ]
+                    continue
 
                 obj = event["object"].to_dict()
                 data = self.convert_datetimes_to_strings(obj)
@@ -122,22 +126,22 @@ class BASE_RUNNER:
                 self.RICH_CONSOLE.print(
                     f"{_} {event_type}: [bold green]{obj["metadata"]["name"]}[/bold green] Name:{self.NAME}"
                 )
-            # self.RICH_CONSOLE.log(
-            #     f"[spring_green1]Watched[/ spring_green1] [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
-            # )
+            self.RICH_CONSOLE.log(
+                f"[spring_green1]Watched[/ spring_green1] [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
+            )
 
         except ApiException as e:
             if e.status == 410:
                 self.RICH_CONSOLE.log("[red] Resouce version is old [/red]")
-                pod_list=self.CLIENTS[_].list_pod_for_all_namespaces()
-                self.LATEST_RESOURCE_VERSION=pod_list.metadata.resource_version
+                pod_list = self.CLIENTS[_].list_pod_for_all_namespaces()
+                self.LATEST_RESOURCE_VERSION = pod_list.metadata.resource_version
             else:
                 self.RICH_CONSOLE.log(
                     f"[deep_pink3]Kubernetes API error[/deep_pink3] for [slate_blue1]{_}[/slate_blue1]: {e}"
                 )
                 self.RICH_CONSOLE.log(traceback.format_exc())
                 time.sleep(1)
-                
+
         except (ApiTypeError, ApiValueError) as e:
             self.RICH_CONSOLE.log(
                 f"[yellow]API Client misuse[/yellow] for [slate_blue1]{_}[/slate_blue1]: {e}"

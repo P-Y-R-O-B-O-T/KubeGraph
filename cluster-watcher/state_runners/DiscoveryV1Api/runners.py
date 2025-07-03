@@ -16,5 +16,5 @@ class ENDPOINT_SLICE_RUNNER(DiscoveryV1Api_RUNNER):
             self.CLIENTS[_].list_endpoint_slice_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )

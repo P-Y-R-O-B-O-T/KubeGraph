@@ -16,5 +16,5 @@ class CSR_RUNNER(CertificatesV1Api_RUNNER):
             self.CLIENTS[_].list_certificate_signing_request,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )

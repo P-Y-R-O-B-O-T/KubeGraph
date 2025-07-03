@@ -16,7 +16,7 @@ class CLUSTER_ROLE_RUNNER(RbacAuthorizationV1Api_RUNNER):
             self.CLIENTS[_].list_cluster_role,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -29,7 +29,7 @@ class CLUSTER_ROLE_BINDINGS_RUNNER(RbacAuthorizationV1Api_RUNNER):
             self.CLIENTS[_].list_cluster_role_binding,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -42,7 +42,7 @@ class ROLE_BINDING_RUNNER(RbacAuthorizationV1Api_RUNNER):
             self.CLIENTS[_].list_role_binding_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
 
 
@@ -55,5 +55,5 @@ class ROLE_RUNNER(RbacAuthorizationV1Api_RUNNER):
             self.CLIENTS[_].list_role_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION,
+            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
         )
