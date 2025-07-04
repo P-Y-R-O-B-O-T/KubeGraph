@@ -20,6 +20,12 @@ OUTPUT_FILE="/etc/redis.conf"
 
 # === Generate redis.conf ===
 cat > "$OUTPUT_FILE" <<EOF
+
+loadmodule /usr/local/lib/redis/modules/redisbloom.so
+loadmodule /usr/local/lib/redis/modules/redisearch.so
+loadmodule /usr/local/lib/redis/modules/rejson.so
+loadmodule /usr/local/lib/redis/modules/redistimeseries.so
+
 #####################################
 # ACL USERS
 #####################################
