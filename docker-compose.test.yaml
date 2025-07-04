@@ -61,6 +61,7 @@ services:
       RI_REDIS_ALIAS: "Kubegraph-Redis"
       RI_REDIS_USERNAME: ${REDIS_ADMIN_USER}
       RI_REDIS_PASSWORD: ${REDIS_ADMIN_PASSWD}
+      RI_PROXY_PATH: /redisinsight
     depends_on:
       - redis
     networks:
@@ -107,6 +108,7 @@ services:
       - api-kubegraph
       - frontend-kubegraph
       - cluster-state-kubegraph
+      - redis-kubegraph
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
@@ -114,6 +116,7 @@ services:
     depends_on:
       - api
       - frontend
+      - redis-insight
 
   frontend:
     image: kubegraph-frontend:latest
