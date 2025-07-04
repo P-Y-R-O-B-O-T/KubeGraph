@@ -5,27 +5,34 @@ create_dot_env() {
     echo ".env Exists"
     return 0
   fi
-  
+ 
   echo "Creating .env ..."
 
   mongo_user="root"
   mongo_passwd=$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
   cluster_state_api_cred_user="cluster_state_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
   cluster_state_api_cred_passwd="cluster_state_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+
   cluster_watch_api_cred_user="cluster_watch_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
   cluster_watch_api_cred_passwd="cluster_watch_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+
+  cluster_watch_redis_cred_user="cluster_watch_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+  cluster_watch_redis_cred_passwd="cluster_watch_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+
+  api_redis_cred_user="api_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+  api_redis_cred_passwd="api_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+
+  graphgen_redis_cred_user="graphgen_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+  graphgen_redis_cred_passwd="graphgen_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+  
+  redis_admin_user="admin_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+  redis_admin_passwd="admin_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+  
   admin_api_cred_user="admin"
   admin_api_cred_passwd="admin_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+
   api_auth_secret_key="secret_key_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "64")
-  echo $mongo_user
-  echo $mongo_passwd
-  echo $cluster_state_api_cred_user
-  echo $cluster_state_api_cred_passwd
-  echo $cluster_watch_api_cred_user
-  echo $cluster_watch_api_cred_passwd
-  echo $admin_api_cred_user
-  echo $admin_api_cred_passwd
-  echo $api_auth_secret_key
+
   echo "MONGO_INITDB_ROOT_USERNAME=$mongo_user" >> .env
   echo "MONGO_INITDB_ROOT_PASSWORD=$mongo_passwd" >> .env
   echo "ADMIN_API_CRED_USER=$admin_api_cred_user" >> .env
@@ -34,6 +41,14 @@ create_dot_env() {
   echo "CLUSTER_WATCH_API_CRED_PASSWD=$cluster_watch_api_cred_passwd" >> .env
   echo "CLUSTER_STATE_API_CRED_USER=$cluster_state_api_cred_user" >> .env
   echo "CLUSTER_STATE_API_CRED_PASSWD=$cluster_state_api_cred_passwd" >> .env
+  echo "CLUSTER_WATCH_REDIS_CRED_USER=$cluster_watch_redis_cred_user" >> .env
+  echo "CLUSTER_WATCH_REDIS_CRED_PASSWD=$cluster_watch_redis_cred_passwd" >> .env
+  echo "API_REDIS_CRED_USER=$api_redis_cred_user" >> .env
+  echo "API_REDIS_CRED_PASSWD=$api_redis_cred_passwd" >> .env
+  echo "GRAPHGEN_REDIS_CRED_USER=$graphgen_redis_cred_user" >> .env
+  echo "GRAPHGEN_REDIS_CRED_PASSWD=$graphgen_redis_cred_passwd" >> .env
+  echo "REDIS_ADMIN_USER=$redis_admin_user" >> .env
+  echo "REDIS_ADMIN_PASSWD=$redis_admin_passwd" >> .env
   echo "API_AUTH_SECRET_KEY=$api_auth_secret_key" >> .env
 }
 
