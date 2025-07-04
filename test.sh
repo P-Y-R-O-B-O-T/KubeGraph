@@ -83,6 +83,13 @@ build_cluster_state_image() {
     cd .. || exit 1
 }
 
+build_cluster_watcher_image() {
+    echo "Building Docker image kubegraph-cluster-watcher:latest..."
+    cd cluster-watcher || exit 1
+    sudo docker build --progress=plain -t kubegraph-cluster-watcher:latest .
+    cd .. || exit 1
+}
+
 build_api_image() {
     echo "Building Docker image kubegraph-api:latest..."
     cd api || exit 1
@@ -101,5 +108,6 @@ sudo docker-compose rm -f
 build_frontend
 build_init_db
 build_cluster_state_image
+build_cluster_watcher_image
 build_api_image
 run_compose
