@@ -47,7 +47,7 @@ class APIConnector:
         )
 
     def push_updates(
-        self, cluster_name: str, resource_type: str, data: dict, event_type: str
+        self, cluster_name: str, resource_type: str, event_type: str, data: dict
     ) -> None:
         if self.TOKEN is None:
             self.get_token(resource_type)
@@ -60,8 +60,9 @@ class APIConnector:
                 json={
                     "cluster_name": cluster_name,
                     "resource_type": resource_type,
+                    "resource_uid": data["metadata"]["uid"],
                     "event_type": event_type,
-                    "cluster_data": data,
+                    "object_data": data,
                 },
                 headers={"Authorization": f"Bearer {self.TOKEN}"},
             )

@@ -1,6 +1,11 @@
 from fastapi import Body, Depends
-from cluster_data.methods import get_cluster_data, set_cluster_data
-from cluster_data.schemas import ClusterDataRequest, ClusterData, ClusterDataUpload
+from cluster_data.methods import get_cluster_data, set_cluster_data, update_cluster_objects
+from cluster_data.schemas import (
+    ClusterDataRequest,
+    ClusterData,
+    ClusterDataUpload,
+    ObjectDataUpload,
+)
 from authentication.auth import get_current_active_user
 from fastapi.responses import Response
 from authentication.schemas import User
@@ -28,3 +33,12 @@ async def fetch_cluster_data(
     current_user: Annotated[User, Depends(get_current_active_user)],
 ):
     return get_cluster_data(CLUSTERS_DATA, cluster_data_request)
+
+
+@CLUSTER_DATA_ROUTER.put("/data", status_code=status.HTTP_202_ACCEPTED)
+async def update_cluster_data(
+    data: Annotated[ObjectDataUpload, Body()],
+    current_user: Annotated[User, Depends(get_current_active_user)],
+):
+    update_cluster_objects(CLUSTERS_DATA, data)
+    return Response(status_code=status.HTTP_202_ACCEPTED)

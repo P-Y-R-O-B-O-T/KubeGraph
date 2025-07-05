@@ -112,12 +112,12 @@ class BASE_RUNNER:
                 obj = event["object"].to_dict()
                 data = self.convert_datetimes_to_strings(obj)
 
-                # self.STACK_API_CONNECTOR.push_updates(
-                #     cluster_name=_,
-                #     resource_type=self.NAME,
-                #     data=data,
-                #     event_type=event_type,
-                # )
+                self.STACK_API_CONNECTOR.push_updates(
+                    cluster_name=_,
+                    resource_type=self.NAME,
+                    event_type=event_type,
+                    data=data,
+                )
 
                 self.RICH_CONSOLE.log(
                     f"[yellow2]Watch {event_type}[/ yellow2]: [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] {obj["metadata"]["name"]} {self.NAME} "

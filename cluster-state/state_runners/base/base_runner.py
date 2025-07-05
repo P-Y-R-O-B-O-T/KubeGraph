@@ -104,7 +104,7 @@ class BASE_RUNNER:
     def structure_data(self, fetched: dict) -> dict:
         data = {}
         for _ in fetched["items"]:
-            data[_["metadata"]["name"]] = _
+            data[_["metadata"]["uid"]] = _
         return self.convert_datetimes_to_strings(data)
 
     def need_file_reload(self) -> bool:
