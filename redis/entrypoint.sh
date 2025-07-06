@@ -17,6 +17,7 @@ REDIS_ADMIN_PASSWD="${REDIS_ADMIN_PASSWD:-default}"
 
 # === Output File ===
 OUTPUT_FILE="/etc/redis.conf"
+OUTPUT_ACL_FILE="/etc/redis.acl"
 
 # === Generate redis.conf ===
 cat > "$OUTPUT_FILE" <<EOF
@@ -25,18 +26,6 @@ loadmodule /usr/local/lib/redis/modules/redisbloom.so
 loadmodule /usr/local/lib/redis/modules/redisearch.so
 loadmodule /usr/local/lib/redis/modules/rejson.so
 loadmodule /usr/local/lib/redis/modules/redistimeseries.so
-
-#####################################
-# ACL USERS
-#####################################
-user default off
-user $REDIS_ADMIN_USER on >$REDIS_ADMIN_PASSWD allkeys allcommands
-
-user $CLUSTER_WATCH_REDIS_CRED_USER on >$CLUSTER_WATCH_REDIS_CRED_PASSWD ~RESOURCE_VERSION_BOOKMARKS:* +@read -@write
-user $API_REDIS_CRED_USER on >$API_REDIS_CRED_PASSWD ~RESOURCE_VERSION_BOOKMARKS:* ~CLUSTER_DATA:* +@write ~GRAPHS:* +@read
-# user $API_REDIS_CRED_USER on >$API_REDIS_CRED_PASSWD ~GRAPHS:* +@read
-user $GRAPHGEN_REDIS_CRED_USER on >$GRAPHGEN_REDIS_CRED_PASSWD ~CLUSTER_DATA:* +@read ~GRAPHS:* +@write
-# user $GRAPHGEN_REDIS_CRED_USER on >$GRAPHGEN_REDIS_CRED_PASSWD ~GRAPHS:* +@write
 
 #####################################
 # NETWORK
@@ -70,6 +59,18 @@ loglevel $LOG_LEVEL
 logfile ""
 EOF
 
-echo "✅ Redis configuration generated at: $OUTPUT_FILE"
+# === Generate ACL ===
+cat > "$OUTPUT_ACL_FILE" <<EOF
+user default off
 
-redis-server /etc/redis.conf
+user $REDIS_ADMIN_USER on >$REDIS_ADMIN_PASSWD allkeys allcommands +auth +ping +select +echo +info
+
+user $CLUSTER_WATCH_REDIS_CRED_USER on >$CLUSTER_WATCH_REDIS_CRED_PASSWD +@read %R~RESOURCE_VERSION_BOOKMARKS:*
+
+user $API_REDIS_CRED_USER on >$API_REDIS_CRED_PASSWD +@read +@write %RW~RESOURCE_VERSION_BOOKMARKS:* %RW~CLUSTER_DATA:* %R~GRAPHS:*
+
+user $GRAPHGEN_REDIS_CRED_USER on >$GRAPHGEN_REDIS_CRED_PASSWD +@read +@write %R~CLUSTER_DATA:* %W~GRAPHS:*
+
+EOF
+
+redis-server /etc/redis.conf --aclfile /etc/redis.acl
