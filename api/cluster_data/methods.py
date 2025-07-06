@@ -4,7 +4,12 @@ from cluster_data.schemas import (
     ClusterDataUpload,
     ObjectDataUpload,
 )
-from cluster_data.errors import CLUSTER_DATA_NOT_FOUND, MEMORY_UNAVAILABLE, CLUSTER_NOT_EXIST_YET, RESOURCE_TYPE_NOT_EXIST_IN_CLUSTER
+from cluster_data.errors import (
+    CLUSTER_DATA_NOT_FOUND,
+    MEMORY_UNAVAILABLE,
+    CLUSTER_NOT_EXIST_YET,
+    RESOURCE_TYPE_NOT_EXIST_IN_CLUSTER,
+)
 from fastapi import HTTPException
 import traceback
 
@@ -51,8 +56,10 @@ def set_cluster_data(storage_area: dict, cluster_data: ClusterDataUpload) -> Non
 
 
 def update_cluster_objects(storage_area: dict, object_data: ObjectDataUpload) -> None:
-    if object_data.cluster_name not in storage_area: raise HTTPException(**CLUSTER_NOT_EXIST_YET)
-    if object_data.resource_type not in storage_area[object_data.cluster_name]: raise HTTPException(**RESOURCE_TYPE_NOT_EXIST_IN_CLUSTER)
+    if object_data.cluster_name not in storage_area:
+        raise HTTPException(**CLUSTER_NOT_EXIST_YET)
+    if object_data.resource_type not in storage_area[object_data.cluster_name]:
+        raise HTTPException(**RESOURCE_TYPE_NOT_EXIST_IN_CLUSTER)
     try:
         if object_data.event_type == "ADDED":
             if (

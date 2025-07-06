@@ -1,5 +1,9 @@
 from fastapi import Body, Depends
-from cluster_data.methods import get_cluster_data, set_cluster_data, update_cluster_objects
+from cluster_data.methods import (
+    get_cluster_data,
+    set_cluster_data,
+    update_cluster_objects,
+)
 from cluster_data.schemas import (
     ClusterDataRequest,
     ClusterData,
