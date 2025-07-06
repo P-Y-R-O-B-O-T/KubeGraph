@@ -1,5 +1,7 @@
 import threading
 
+from redis_connector.redis_connector import REDIS_CONNECTOR
+
 from state_runners.CoreV1Api.runners import (
     POD_RUNNER,
     NAMESPACE_RUNNER,

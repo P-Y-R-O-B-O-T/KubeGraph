@@ -14,7 +14,7 @@ class REDIS_CONNECTOR:
         self.RETRY = Retry(self.BACKOFF, retries=3)
 
         self.POOL = redis.ConnectionPool(
-            host="your_redis_host",
+            host="redis",
             port=6379,
             db=0,
             username=os.getenv("CLUSTER_STATE_REDIS_CRED_USER"),

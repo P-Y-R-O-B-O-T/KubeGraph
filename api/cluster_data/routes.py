@@ -10,6 +10,7 @@ from cluster_data.schemas import (
     ClusterDataUpload,
     ObjectDataUpload,
 )
+from redis_connector.redis_connector import REDIS_CONNECTOR
 from authentication.auth import get_current_active_user
 from fastapi.responses import Response
 from authentication.schemas import User
