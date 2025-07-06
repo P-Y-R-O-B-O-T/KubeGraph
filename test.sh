@@ -19,6 +19,9 @@ create_dot_env() {
   cluster_watch_redis_cred_user="cluster_watch_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
   cluster_watch_redis_cred_passwd="cluster_watch_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
 
+  cluster_state_redis_cred_user="cluster_state_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+  cluster_state_redis_cred_passwd="cluster_state_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+  
   api_redis_cred_user="api_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
   api_redis_cred_passwd="api_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
 
@@ -43,6 +46,8 @@ create_dot_env() {
   echo "CLUSTER_STATE_API_CRED_PASSWD=$cluster_state_api_cred_passwd" >> .env
   echo "CLUSTER_WATCH_REDIS_CRED_USER=$cluster_watch_redis_cred_user" >> .env
   echo "CLUSTER_WATCH_REDIS_CRED_PASSWD=$cluster_watch_redis_cred_passwd" >> .env
+  echo "CLUSTER_STATE_REDIS_CRED_USER=$cluster_state_redis_cred_user" >> .env
+  echo "CLUSTER_STATE_REDIS_CRED_PASSWD=$cluster_state_redis_cred_passwd" >> .env
   echo "API_REDIS_CRED_USER=$api_redis_cred_user" >> .env
   echo "API_REDIS_CRED_PASSWD=$api_redis_cred_passwd" >> .env
   echo "GRAPHGEN_REDIS_CRED_USER=$graphgen_redis_cred_user" >> .env
