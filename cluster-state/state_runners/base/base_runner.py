@@ -11,6 +11,7 @@ import traceback
 import constants.constants as CONSTANTS
 import kubeconfig_utils.utils as KUBECONFIG_UTILS
 from api_connector.connector import APIConnector
+from redis_connector.redis_connector import REDIS_CONNECTOR
 
 
 class BASE_RUNNER:
@@ -21,22 +22,11 @@ class BASE_RUNNER:
             log_path=False,
             safe_box=False,
         )
-        self.STACK_API_CONNECTOR = APIConnector()
-        self.API_OBJECT_CLASS = api_object_class
-        self.NAME = name
 
-    def convert_datetimes_to_strings(self, obj: Any) -> Any:
-        if isinstance(obj, dict):
-            return {
-                key: self.convert_datetimes_to_strings(value)
-                for key, value in obj.items()
-            }
-        elif isinstance(obj, (list, tuple)):
-            return [self.convert_datetimes_to_strings(item) for item in obj]
-        elif isinstance(obj, datetime):
-            return obj.isoformat()
-        else:
-            return obj
+        self.API_OBJECT_CLASS = api_object_class
+        self.STACK_API_CONNECTOR = APIConnector()
+        self.REDIS_CONNECTOR = REDIS_CONNECTOR()
+        self.NAME = name
 
     def load_clients(self) -> None:
         self.RICH_CONSOLE.print(f"Loading files {self.NAME}")
@@ -79,17 +69,17 @@ class BASE_RUNNER:
                         self.RICH_CONSOLE.log(
                             f"[khaki1]Fetching[/ khaki1] [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
                         )
-                        fetched = self.fetch_state(
-                            _
-                        )  # await asyncio.to_thread(self.fetch_state, _)
+                        fetched = self.fetch_state(_)
                         self.RICH_CONSOLE.log(
                             f"[spring_green1]Fetched[/ spring_green1]  [slate_blue1]{_[:_.find(".")]}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"
                         )
 
                         structured_data = self.structure_data(fetched.to_dict())
-                        self.STACK_API_CONNECTOR.upload_data(
-                            _, self.NAME, structured_data
-                        )
+
+                        for __ in structured_data:
+                            self.REDIS_CONNECTOR.update_resource(
+                                _, self.NAME, structured_data[__]
+                            )
 
                     except:
                         self.RICH_CONSOLE.log(
@@ -106,6 +96,19 @@ class BASE_RUNNER:
         for _ in fetched["items"]:
             data[_["metadata"]["uid"]] = _
         return self.convert_datetimes_to_strings(data)
+
+    def convert_datetimes_to_strings(self, obj: Any) -> Any:
+        if isinstance(obj, dict):
+            return {
+                key: self.convert_datetimes_to_strings(value)
+                for key, value in obj.items()
+            }
+        elif isinstance(obj, (list, tuple)):
+            return [self.convert_datetimes_to_strings(item) for item in obj]
+        elif isinstance(obj, datetime):
+            return obj.isoformat()
+        else:
+            return obj
 
     def need_file_reload(self) -> bool:
         return sorted(self.FILES) != sorted(os.listdir(CONSTANTS.KUBECONF_PATH))
