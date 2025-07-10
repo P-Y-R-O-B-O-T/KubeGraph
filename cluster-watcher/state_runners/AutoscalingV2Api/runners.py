@@ -12,9 +12,11 @@ class HPA_RUNNER(AutoscalingV2Api_RUNNER):
         super().__init__("AutoscalingV2Api_HPAS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_horizontal_pod_autoscaler_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )

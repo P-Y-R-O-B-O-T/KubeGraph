@@ -12,6 +12,7 @@ from kubernetes import watch
 import constants.constants as CONSTANTS
 import kubeconfig_utils.utils as KUBECONFIG_UTILS
 from api_connector.connector import APIConnector
+from redis_connector.redis_connector import REDIS_CONNECTOR
 from kubernetes.client.exceptions import ApiException, ApiTypeError, ApiValueError
 
 
@@ -24,9 +25,9 @@ class BASE_RUNNER:
             safe_box=False,
         )
 
-        self.LATEST_RESOURCE_VERSION = {}
         self.API_OBJECT_CLASS = api_object_class
         self.STACK_API_CONNECTOR = APIConnector()
+        self.REDIS_CONNECTOR = REDIS_CONNECTOR()
         self.NAME = name
 
     def load_clients(self) -> None:
@@ -62,17 +63,8 @@ class BASE_RUNNER:
             self.create_watchers()
 
             while True:
-                start_time = time.time()
-
                 try:
-                    self.RICH_CONSOLE.log(
-                        f"[khaki1]Watching[/ khaki1] [light_salmon1]{self.NAME}[/ light_salmon1]"
-                    )
                     self.watch_clusters()
-
-                    self.RICH_CONSOLE.log(
-                        f"[spring_green1]Watched[/ spring_green1] [light_salmon1]{self.NAME}[/ light_salmon1] in {time.time() - start_time}"
-                    )
                 except:
                     self.RICH_CONSOLE.log(
                         f"[deep_pink3]Error[/ deep_pink3] watching [light_salmon1]{self.NAME}[/ light_salmon1]"
@@ -104,20 +96,17 @@ class BASE_RUNNER:
                     self.RICH_CONSOLE.log(
                         f"[gold1]BOOKMARK[/ gold1] for [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1]"
                     )
-                    self.LATEST_RESOURCE_VERSION[_] = event["object"]["metadata"][
-                        "resourceVersion"
-                    ]
+                    self.REDIS_CONNECTOR.update_bookmark(
+                        _,
+                        self.NAME,
+                        str(event["object"]["metadata"]["resourceVersion"]),
+                    )
                     continue
 
                 obj = event["object"].to_dict()
                 data = self.convert_datetimes_to_strings(obj)
 
-                self.STACK_API_CONNECTOR.push_updates(
-                    cluster_name=_,
-                    resource_type=self.NAME,
-                    event_type=event_type,
-                    data=data,
-                )
+                self.REDIS_CONNECTOR.update_resource(_, self.NAME, event_type, data)
 
                 self.RICH_CONSOLE.log(
                     f"[yellow2]Watch {event_type}[/ yellow2]: [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1] {obj["metadata"]["name"]} {self.NAME} "
@@ -127,10 +116,12 @@ class BASE_RUNNER:
             )
 
         except ApiException as e:
+            self.RICH_CONSOLE.log(traceback.format_exc())
             if e.status == 410:
-                self.RICH_CONSOLE.log("[red] Resouce version is old [/red]")
-                pod_list = self.CLIENTS[_].list_pod_for_all_namespaces()
-                self.LATEST_RESOURCE_VERSION = pod_list.metadata.resource_version
+                self.RICH_CONSOLE.log(
+                    f"[red] Resouce version is old [slate_blue1]{_}[/ slate_blue1] | [light_salmon1]{self.NAME}[/ light_salmon1], setting it to None[/red]"
+                )
+                self.REDIS_CONNECTOR.delete_bookmark(_, self.NAME)
             else:
                 self.RICH_CONSOLE.log(
                     f"[deep_pink3]Kubernetes API error[/deep_pink3] for [slate_blue1]{_}[/slate_blue1]: {e}"

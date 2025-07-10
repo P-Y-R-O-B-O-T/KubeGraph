@@ -4,7 +4,6 @@ from state_runners.CoreV1Api.runners import (
     POD_RUNNER,
     NAMESPACE_RUNNER,
     CONFIGMAP_RUNNER,
-    COMPONENT_STATUS_RUNNER,
     ENDPOINT_RUNNER,
     EVENT_RUNNER,
     LIMIT_RANGE_RUNNER,

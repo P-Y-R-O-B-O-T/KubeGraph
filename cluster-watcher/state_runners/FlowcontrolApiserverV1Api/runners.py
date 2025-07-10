@@ -12,11 +12,13 @@ class FLOW_SCHEMA_RUNNER(FlowcontrolApiserverV1Api_RUNNER):
         super().__init__("FlowcontrolApiserverV1Api_FLOW_SCHEMAS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_flow_schema,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )
 
 
@@ -25,9 +27,11 @@ class PRIORITY_LEVEL_CONFIG_RUNNER(FlowcontrolApiserverV1Api_RUNNER):
         super().__init__("FlowcontrolApiserverV1Api_PRIORITY_LEVEL_CONFIGS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_priority_level_configuration,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )

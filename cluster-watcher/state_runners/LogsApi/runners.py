@@ -12,9 +12,11 @@ class LOG_FILE_LIST_HANDLER_RUNNER(LogsApi_RUNNER):
         super().__init__("LogsApi_LOG_FILE_LIST_HANDLERS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].log_file_list_handler,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )

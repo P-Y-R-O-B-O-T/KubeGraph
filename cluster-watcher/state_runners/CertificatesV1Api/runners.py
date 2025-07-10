@@ -12,9 +12,11 @@ class CSR_RUNNER(CertificatesV1Api_RUNNER):
         super().__init__("CertificatesV1Api_CSRS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_certificate_signing_request,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )

@@ -12,9 +12,11 @@ class ENDPOINT_SLICE_RUNNER(DiscoveryV1Api_RUNNER):
         super().__init__("DiscoveryV1Api_ENDPOINT_SLICES")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_endpoint_slice_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )

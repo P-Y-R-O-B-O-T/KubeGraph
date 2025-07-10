@@ -23,11 +23,13 @@ class DAEMONSET_RUNNER(AppsV1Api_RUNNER):
         super().__init__("AppsV1Api_DAEMONSETS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_daemon_set_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )
 
 
@@ -36,11 +38,13 @@ class DEPLOYMENT_RUNNER(AppsV1Api_RUNNER):
         super().__init__("AppsV1Api_DEPLOYMENTS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_deployment_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )
 
 
@@ -49,11 +53,13 @@ class REPLICASET_RUNNER(AppsV1Api_RUNNER):
         super().__init__("AppsV1Api_REPLICASETS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_replica_set_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )
 
 
@@ -62,9 +68,11 @@ class STATEFULSET_RUNNER(AppsV1Api_RUNNER):
         super().__init__("AppsV1Api_STATEFULSETS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_stateful_set_for_all_namespaces,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )

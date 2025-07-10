@@ -10,7 +10,7 @@ class ApiextensionsV1Api_RUNNER(BASE_RUNNER):
 
 class CUSTOM_RESOURCE_DEFINITION_RUNNER(ApiextensionsV1Api_RUNNER):
     def __init__(self) -> None:
-        super().__init__("ApiextensionsV1Api_MUTATING_WEBHOOK_CONFIGS")
+        super().__init__("ApiextensionsV1Api_CUSTOM_RESOURCE_DEFINITIONS")
 
     def fetch_state(self, _):
         return self.CLIENTS[_].list_custom_resource_definition(

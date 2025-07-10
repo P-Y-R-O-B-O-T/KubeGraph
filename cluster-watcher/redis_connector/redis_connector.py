@@ -180,4 +180,4 @@ class REDIS_CONNECTOR:
         return int(str(resp))
 
     def delete_bookmark(self, cluster: str, resource_type: str) -> None:
-        self.CONNECTION.delete(f"RESOURCE_VERSION_BOOKMARKS:{cluster}", resource_type)
+        self.CONNECTION.hdel(f"RESOURCE_VERSION_BOOKMARKS:{cluster}", resource_type)

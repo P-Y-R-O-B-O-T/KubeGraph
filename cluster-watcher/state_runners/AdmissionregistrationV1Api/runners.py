@@ -12,11 +12,12 @@ class MUTATING_WEBHOOK_CONFIG_RUNNER(AdmissionregistrationV1Api_RUNNER):
         super().__init__("AdmissionregistrationV1Api_MUTATING_WEBHOOK_CONFIGS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_mutating_webhook_configuration,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )
 
 
@@ -26,8 +27,15 @@ class VALIDATING_ADMISSION_POLICY_RUNNER(AdmissionregistrationV1Api_RUNNER):
         super().__init__("AdmissionregistrationV1Api_VALIDATING_ADMISSION_POLICIES")
 
     def fetch_state(self, _):
-        return self.CLIENTS[_].list_validating_admission_policy(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
+        # return self.CLIENTS[_].list_validating_admission_policy(
+        #     **{"timeout_seconds": 20, "_request_timeout": 20}
+        # )
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_validating_admission_policy,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=bookmark,
         )
 
 
@@ -49,9 +57,10 @@ class VALIDATING_WEBHOOK_CONFIG_RUNNER(AdmissionregistrationV1Api_RUNNER):
         super().__init__("AdmissionregistrationV1Api_VALIDATING_WEBHOOK_CONFIGS")
 
     def fetch_state(self, _):
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_validating_webhook_configuration,
             timeout_seconds=5,
             allow_watch_bookmarks=True,
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
+            resource_version=bookmark,
         )
