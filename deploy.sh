@@ -28,6 +28,9 @@ create_dot_env() {
   graphgen_redis_cred_user="graphgen_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
   graphgen_redis_cred_passwd="graphgen_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
   
+  node_data_redis_cred_user="node_data_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+  node_data_redis_cred_passwd="node_data_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
+
   redis_admin_user="admin_user_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
   redis_admin_passwd="admin_passwd_"$(tr -dc A-Za-z0-9 </dev/urandom | head -c "32")
   
@@ -52,6 +55,8 @@ create_dot_env() {
   echo "API_REDIS_CRED_PASSWD=$api_redis_cred_passwd" >> .env
   echo "GRAPHGEN_REDIS_CRED_USER=$graphgen_redis_cred_user" >> .env
   echo "GRAPHGEN_REDIS_CRED_PASSWD=$graphgen_redis_cred_passwd" >> .env
+  echo "NODE_DATA_REDIS_CRED_USER=$node_data_redis_cred_user" >> .env
+  echo "NODE_DATA_REDIS_CRED_PASSWD=$node_data_redis_cred_passwd" >> .env
   echo "REDIS_ADMIN_USER=$redis_admin_user" >> .env
   echo "REDIS_ADMIN_PASSWD=$redis_admin_passwd" >> .env
   echo "API_AUTH_SECRET_KEY=$api_auth_secret_key" >> .env
@@ -92,6 +97,13 @@ build_api_image() {
     cd .. || exit 1
 }
 
+build_node_data_image() {
+    echo "Building Docker image kubegraph-node-data:latest..."
+    cd node-data || exit 1
+    sudo docker build --progress=plain -t kubegraph-node-data:latest .
+    cd .. || exit 1
+}
+
 run_compose() {
     echo "Starting Docker Compose with docker-compose.test.yaml..."
     sudo docker compose -f docker-compose.yaml up -d
@@ -104,4 +116,5 @@ build_init_db
 build_cluster_state_image
 build_cluster_watcher_image
 build_api_image
+build_node_data_image
 run_compose

@@ -35,6 +35,18 @@ services:
       - redis
       - nginx
 
+  node-data:
+    image: kubegraph-node-data:latest
+    container_name: node-data-kubegraph
+    restart: unless-stopped
+    networks:
+      - redis-kubegraph
+    environment:
+      - NODE_DATA_REDIS_CRED_USER=${NODE_DATA_REDIS_CRED_USER}
+      - NODE_DATA_REDIS_CRED_PASSWD=${NODE_DATA_REDIS_CRED_PASSWD}
+    depends_on:
+      - redis
+
   mongo:
     image: mongo
     container_name: mongo-kubegraph
@@ -73,6 +85,8 @@ services:
       - API_REDIS_CRED_PASSWD=${API_REDIS_CRED_PASSWD}
       - GRAPHGEN_REDIS_CRED_USER=${GRAPHGEN_REDIS_CRED_USER}
       - GRAPHGEN_REDIS_CRED_PASSWD=${GRAPHGEN_REDIS_CRED_PASSWD}
+      - NODE_DATA_REDIS_CRED_USER=${NODE_DATA_REDIS_CRED_USER}
+      - NODE_DATA_REDIS_CRED_PASSWD=${NODE_DATA_REDIS_CRED_PASSWD}
       - REDIS_ADMIN_USER=${REDIS_ADMIN_USER}
       - REDIS_ADMIN_PASSWD=${REDIS_ADMIN_PASSWD}
 
