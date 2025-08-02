@@ -27,9 +27,6 @@ class VALIDATING_ADMISSION_POLICY_RUNNER(AdmissionregistrationV1Api_RUNNER):
         super().__init__("AdmissionregistrationV1Api_VALIDATING_ADMISSION_POLICIES")
 
     def fetch_state(self, _):
-        # return self.CLIENTS[_].list_validating_admission_policy(
-        #     **{"timeout_seconds": 20, "_request_timeout": 20}
-        # )
         bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
         return self.WATCHERS[_].stream(
             self.CLIENTS[_].list_validating_admission_policy,
@@ -47,8 +44,12 @@ class VALIDATING_ADMISSION_POLICY_BINDING_RUNNER(AdmissionregistrationV1Api_RUNN
         )
 
     def fetch_state(self, _):
-        return self.CLIENTS[_].list_validating_admission_policy_binding(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_validating_admission_policy_binding,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=bookmark,
         )
 
 

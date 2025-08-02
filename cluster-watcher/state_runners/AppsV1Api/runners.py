@@ -13,8 +13,13 @@ class CONTROLLER_VERSION_RUNNER(AppsV1Api_RUNNER):
         super().__init__("AppsV1Api_CONTROLLER_VERSIONS")
 
     def fetch_state(self, _):
-        return self.CLIENTS[_].list_controller_revision_for_all_namespaces(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
+        bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
+        # if bookmark == None : return []
+        return self.WATCHERS[_].stream(
+            self.CLIENTS[_].list_controller_revision_for_all_namespaces,
+            timeout_seconds=5,
+            allow_watch_bookmarks=True,
+            resource_version=bookmark,
         )
 
 

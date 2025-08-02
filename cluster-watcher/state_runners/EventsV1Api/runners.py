@@ -12,11 +12,5 @@ class EVENTS_RUNNER(EventsV1Api_RUNNER):
         super().__init__("EventsV1Api_EVENTS")
 
     def fetch_state(self, _):
-        return self.WATCHERS[_].stream(
-            self.CLIENTS[_].list_event_for_all_namespaces,
-            timeout_seconds=5,
-            allow_watch_bookmarks=True,
-            send_initial_events=True,
-            resource_version_match="NotOlderThan",
-            resource_version=self.LATEST_RESOURCE_VERSION.get(_),
-        )
+        return []
+        # MIGHT NOT BE REQUIRED IN FUTURE

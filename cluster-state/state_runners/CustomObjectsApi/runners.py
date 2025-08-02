@@ -13,6 +13,7 @@ class CLUSTER_CUSTOM_OBJECT_RUNNER(CustomObjectsApi_RUNNER):
         super().__init__("CustomObjectsApi_CLUSTER_CUSTOM_OBJECTS")
 
     def fetch_state(self, _):
+        # ⚠️ NEEDS TO BE HEAVILY MODIFIED
         return self.CLIENTS[_].list_cluster_custom_object(
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )
@@ -23,6 +24,7 @@ class CUSTOM_OBJECTS_RUNNER(CustomObjectsApi_RUNNER):
         super().__init__("CustomObjectsApi_CUSTOM_OBJECTS")
 
     def fetch_state(self, _):
+        # ⚠️ NEEDS TO BE HEAVILY MODIFIED
         return self.CLIENTS[_].list_custom_object_for_all_namespaces(
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )

@@ -12,6 +12,7 @@ class CLUSTER_CUSTOM_OBJECT_RUNNER(CustomObjectsApi_RUNNER):
         super().__init__("CustomObjectsApi_CLUSTER_CUSTOM_OBJECTS")
 
     def fetch_state(self, _):
+        # ⚠️ NEEDS TO BE HEAVILY MODIFIED
         bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
         # if bookmark == None : return []
         return self.WATCHERS[_].stream(
@@ -27,6 +28,7 @@ class CUSTOM_OBJECTS_RUNNER(CustomObjectsApi_RUNNER):
         super().__init__("CustomObjectsApi_CUSTOM_OBJECTS")
 
     def fetch_state(self, _):
+        # ⚠️ NEEDS TO BE HEAVILY MODIFIED
         bookmark = self.REDIS_CONNECTOR.get_bookmark(_, self.NAME)
         # if bookmark == None : return []
         return self.WATCHERS[_].stream(

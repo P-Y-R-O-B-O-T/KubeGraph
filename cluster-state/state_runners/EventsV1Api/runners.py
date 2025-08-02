@@ -1,5 +1,4 @@
 from state_runners.base.base_runner import BASE_RUNNER
-
 from kubernetes import client
 
 
@@ -13,6 +12,5 @@ class EVENTS_RUNNER(EventsV1Api_RUNNER):
         super().__init__("EventsV1Api_EVENTS")
 
     def fetch_state(self, _):
-        return self.CLIENTS[_].list_event_for_all_namespaces(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+        return []
+        # MIGHT NOT BE REQUIRED IN FUTURE
