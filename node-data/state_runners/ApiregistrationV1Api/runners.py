@@ -11,7 +11,5 @@ class API_SERVICE_RUNNER(ApiregistrationV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("ApiregistrationV1Api_API_SERVICES")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_api_service(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}

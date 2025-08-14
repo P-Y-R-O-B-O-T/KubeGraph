@@ -11,47 +11,37 @@ class CSI_DRIVER_RUNNER(StorageV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("StorageV1Api_CSI_DRIVERS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_csi_driver(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}
 
 
 class CSI_NODE_RUNNER(StorageV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("StorageV1Api_CSI_NODES")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_csi_node(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}
 
 
 class CSI_STORAGE_CAPACITY_RUNNER(StorageV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("StorageV1Api_CSI_STORAGE_CAPACITIES")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_csi_storage_capacity_for_all_namespaces(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}
 
 
 class STORAGE_CLASS_RUNNER(StorageV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("StorageV1Api_STORAGE_CLASSES")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_storage_class(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}
 
 
 class VOLUME_ATTACHMENT_RUNNER(StorageV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("StorageV1Api_VOLUME_ATTACHMENTS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_volume_attachment(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}

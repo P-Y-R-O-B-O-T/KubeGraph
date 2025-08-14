@@ -11,7 +11,5 @@ class CSR_RUNNER(CertificatesV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("CertificatesV1Api_CSRS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_certificate_signing_request(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}

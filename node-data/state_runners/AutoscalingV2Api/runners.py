@@ -11,7 +11,5 @@ class HPA_RUNNER(AutoscalingV2Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("AutoscalingV2Api_HPAS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_horizontal_pod_autoscaler_for_all_namespaces(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}

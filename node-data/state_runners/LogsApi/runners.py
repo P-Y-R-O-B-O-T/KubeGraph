@@ -11,5 +11,5 @@ class LOG_FILE_LIST_HANDLER_RUNNER(LogsApi_RUNNER):
     def __init__(self) -> None:
         super().__init__("LogsApi_LOG_FILE_LIST_HANDLERS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].log_file_list_handler(**{"_request_timeout": 20})
+    def get_object_data(self, _):
+        return {}

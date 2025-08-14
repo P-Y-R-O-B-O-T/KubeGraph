@@ -11,7 +11,7 @@ class CUSTOM_RESOURCE_DEFINITION_RUNNER(ApiextensionsV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("ApiextensionsV1Api_CUSTOM_RESOURCE_DEFINITIONS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_custom_resource_definition(
+    def get_object_data(self, _):
+        return {}.CLIENTS[_].list_custom_resource_definition(
             **{"timeout_seconds": 20, "_request_timeout": 20}
         )

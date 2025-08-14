@@ -11,17 +11,13 @@ class JOB_RUNNER(BatchV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("BatchV1Api_JOBS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_job_for_all_namespaces(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}
 
 
 class CRON_JOB_RUNNER(BatchV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("BatchV1Api_CRON_JOBS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_cron_job_for_all_namespaces(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}

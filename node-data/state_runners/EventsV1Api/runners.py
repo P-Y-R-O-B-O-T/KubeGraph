@@ -11,6 +11,6 @@ class EVENTS_RUNNER(EventsV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("EventsV1Api_EVENTS")
 
-    def get_data(self, _):
+    def get_object_data(self, _):
         return []
         # MIGHT NOT BE REQUIRED IN FUTURE

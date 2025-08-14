@@ -11,37 +11,29 @@ class CLUSTER_ROLE_RUNNER(RbacAuthorizationV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("RbacAuthorizationV1Api_CLUSTER_ROLES")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_cluster_role(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}
 
 
 class CLUSTER_ROLE_BINDINGS_RUNNER(RbacAuthorizationV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("RbacAuthorizationV1Api_CLUSTER_ROLE_BINDINGS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_cluster_role_binding(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}
 
 
 class ROLE_BINDING_RUNNER(RbacAuthorizationV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("RbacAuthorizationV1Api_ROLE_BINDINGS")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_role_binding_for_all_namespaces(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}
 
 
 class ROLE_RUNNER(RbacAuthorizationV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("RbacAuthorizationV1Api_ROLES")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_role_for_all_namespaces(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}

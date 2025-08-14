@@ -11,7 +11,5 @@ class RUNTIME_CLASS_RUNNER(NodeV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("NodeV1Api_RUNTIME_CLASSES")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_runtime_class(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}

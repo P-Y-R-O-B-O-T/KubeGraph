@@ -11,7 +11,5 @@ class PRIORITY_CLASS_RUNNER(SchedulingV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("SchedulingV1Api_PRIORITY_CLASSES")
 
-    def get_data(self, _):
-        return self.CLIENTS[_].list_priority_class(
-            **{"timeout_seconds": 20, "_request_timeout": 20}
-        )
+    def get_object_data(self, _):
+        return {}
