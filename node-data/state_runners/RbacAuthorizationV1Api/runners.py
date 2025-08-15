@@ -1,10 +1,9 @@
 from state_runners.base.base_runner import BASE_RUNNER
-from kubernetes import client
 
 
 class RbacAuthorizationV1Api_RUNNER(BASE_RUNNER):
     def __init__(self, name) -> None:
-        super().__init__(client.RbacAuthorizationV1Api, name)
+        super().__init__(name)
 
 
 class CLUSTER_ROLE_RUNNER(RbacAuthorizationV1Api_RUNNER):

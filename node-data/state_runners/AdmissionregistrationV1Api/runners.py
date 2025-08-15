@@ -1,10 +1,9 @@
 from state_runners.base.base_runner import BASE_RUNNER
-from kubernetes import client
 
 
 class AdmissionregistrationV1Api_RUNNER(BASE_RUNNER):
     def __init__(self, name) -> None:
-        super().__init__(client.AdmissionregistrationV1Api, name)
+        super().__init__(name)
 
 
 class MUTATING_WEBHOOK_CONFIG_RUNNER(AdmissionregistrationV1Api_RUNNER):

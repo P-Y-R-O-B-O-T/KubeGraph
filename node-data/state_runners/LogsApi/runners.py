@@ -1,10 +1,9 @@
 from state_runners.base.base_runner import BASE_RUNNER
-from kubernetes import client
 
 
 class LogsApi_RUNNER(BASE_RUNNER):
     def __init__(self, name) -> None:
-        super().__init__(client.LogsApi, name)
+        super().__init__(name)
 
 
 class LOG_FILE_LIST_HANDLER_RUNNER(LogsApi_RUNNER):
