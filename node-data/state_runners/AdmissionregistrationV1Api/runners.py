@@ -31,6 +31,7 @@ class VALIDATING_ADMISSION_POLICY_BINDING_RUNNER(AdmissionregistrationV1Api_RUNN
     def get_object_data(self, _):
         return {}
 
+
 class VALIDATING_WEBHOOK_CONFIG_RUNNER(AdmissionregistrationV1Api_RUNNER):
     def __init__(self) -> None:
         super().__init__("AdmissionregistrationV1Api_VALIDATING_WEBHOOK_CONFIGS")
