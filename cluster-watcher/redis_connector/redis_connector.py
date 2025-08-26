@@ -1,4 +1,5 @@
 import redis
+import json
 import os
 from redis.backoff import ExponentialBackoff
 from redis.retry import Retry
@@ -82,7 +83,7 @@ class REDIS_CONNECTOR:
                 latest_resource_version,
                 resource_s_version,
             )
-            self.notify_node_data_service(cluster, resource_type, data["metadata"]["uid"], detete=True)
+            self.notify_node_data_service(cluster, resource_type, data["metadata"]["uid"], delete=True)
 
     def add_resource(
         self,
@@ -185,6 +186,14 @@ class REDIS_CONNECTOR:
     def delete_bookmark(self, cluster: str, resource_type: str) -> None:
         self.CONNECTION.hdel(f"RESOURCE_VERSION_BOOKMARKS:{cluster}", resource_type)
     
-    def notify_node_data_service(self, cluster: str, resource_type: str, resource_uid: str, detete: bool = False) -> None:
+    def notify_node_data_service(self, cluster: str, resource_type: str, resource_uid: str, delete: bool = False) -> None:
         # USE REDIS FUNCTIONS TO NOTIFY THE NODE DATA SERVICE
-        pass
+        json_data = {
+            "cluster": cluster,
+            "resource_type": resource_type,
+            "resource_uid": resource_uid,
+            "delete": delete
+        }
+        json_payload = json.dumps(json_data)
+
+        self.CONNECTION.rpush("CLUSTER_DATA:UPDATES_QUEUE", json_payload)
