@@ -142,19 +142,7 @@ class APP:
             cluster_data=self.REDIS_CONNECTOR.cluster_data(self,current_update["cluster"])
             ## Later will decide what to do with this data.
             ## Graph servic would handle any additional tasks.
-            
-
-
-                
-
-            
-
-
-
-
-            
-
-            
+      
 
 if __name__ == "__main__":
     print("Starting all watchers with concurrency")

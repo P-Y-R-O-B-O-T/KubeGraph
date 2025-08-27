@@ -1,6 +1,8 @@
 from ast import Dict
+from turtle import update
 import redis
 import os
+import json
 from redis.backoff import ExponentialBackoff
 from redis.retry import Retry
 from redis.exceptions import ConnectionError, TimeoutError
@@ -55,8 +57,13 @@ class REDIS_CONNECTOR:
     def get_update(
         self
     )-> Dict| None:
-        pass
-    
+        
+        update_items=self.CONNECTION.lrange("CLUSTER_DATA:UPDATES_QUEUE",0,0)
+        if update_items==[]:
+            return
+        return json.loads(update_items[0])
+        
+
     def get_update_data(
         self,update_notification:Dict
     )-> Dict | None:
