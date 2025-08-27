@@ -99,7 +99,7 @@ class REDIS_CONNECTOR:
             and not resource_s_version == [None]
             and not resource_s_version == []
             and int(str(resource_s_version[0]))
-            <= int(data["metadata"]["resource_version"])
+            < int(data["metadata"]["resource_version"])
         ):
             self.CONNECTION.json().set(
                 f"CLUSTER_DATA:{cluster}",
@@ -129,7 +129,7 @@ class REDIS_CONNECTOR:
             and not resource_s_version == [None]
             and not resource_s_version == []
             and int(str(resource_s_version[0]))
-            <= int(data["metadata"]["resource_version"])
+            < int(data["metadata"]["resource_version"])
         ):
             self.CONNECTION.json().set(
                 f"CLUSTER_DATA:{cluster}",
