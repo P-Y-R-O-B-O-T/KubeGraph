@@ -63,7 +63,9 @@ class REDIS_CONNECTOR:
                 f"$.{resource_type}.{data["metadata"]["uid"]}",
                 data,
             )
-            self.notify_node_data_service(cluster, resource_type, data["metadata"]["uid"])
+            self.notify_node_data_service(
+                cluster, resource_type, data["metadata"]["uid"]
+            )
             return
 
         if (
@@ -78,7 +80,9 @@ class REDIS_CONNECTOR:
                 f"$.{resource_type}.{data["metadata"]["uid"]}",
                 data,
             )
-            self.notify_node_data_service(cluster, resource_type, data["metadata"]["uid"])
+            self.notify_node_data_service(
+                cluster, resource_type, data["metadata"]["uid"]
+            )
             return
 
         if latest_resource_version == None and resource_s_version in [None, [None], []]:
@@ -87,15 +91,19 @@ class REDIS_CONNECTOR:
                 f"$.{resource_type}.{data["metadata"]["uid"]}",
                 data,
             )
-            self.notify_node_data_service(cluster, resource_type, data["metadata"]["uid"])
+            self.notify_node_data_service(
+                cluster, resource_type, data["metadata"]["uid"]
+            )
 
-    def notify_node_data_service(self, cluster: str, resource_type: str, resource_uid: str, delete: bool = False) -> None:
+    def notify_node_data_service(
+        self, cluster: str, resource_type: str, resource_uid: str, delete: bool = False
+    ) -> None:
         # USE REDIS FUNCTIONS TO NOTIFY THE NODE DATA SERVICE
         json_data = {
             "cluster": cluster,
             "resource_type": resource_type,
             "resource_uid": resource_uid,
-            "delete": delete
+            "delete": delete,
         }
         json_payload = json.dumps(json_data)
 

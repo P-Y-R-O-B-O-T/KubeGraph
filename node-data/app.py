@@ -1,6 +1,7 @@
 from ast import Dict
 import threading
-import time 
+import time
+import types
 from redis_connector.redis_connector import REDIS_CONNECTOR
 
 from state_runners.CoreV1Api.runners import (
@@ -70,7 +71,9 @@ from state_runners.StorageV1Api.runners import (
 
 class APP:
     def __init__(self) -> None:
-        self.REDIS_CONNECTOR=REDIS_CONNECTOR()
+        self.REDIS_CONNECTOR = REDIS_CONNECTOR()
+        self.REDIS_CONNECTOR.init_connection()
+
         self.CLEANER_OBJECTS = {
             "POD_RUNNER": POD_RUNNER(),
             "NAMESPACE": NAMESPACE_RUNNER(),
@@ -124,28 +127,33 @@ class APP:
             "VOLUME_ATTACHMENT_RUNNER": VOLUME_ATTACHMENT_RUNNER(),
         }
 
-    def run(self) ->None:
+    def run(self) -> None:
         while True:
-            current_update=self.REDIS_CONNECTOR.get_update()
-            if type(current_update)!=Dict:
-                time.sleep(1)
-                break
-            current_update_data=self.REDIS_CONNECTOR.get_update_data(current_update)
+            update_notification = self.REDIS_CONNECTOR.get_update_notification()
 
-             
-            cleaned_data=self.CLEANER_OBJECTS[current_update["resouce_type"]](current_update_data)
-            
-            update_status=self.REDIS_CONNECTOR.update_node_data(cleaned_data,current_update)
-            if not update_status:
-                pass
-            
-            cluster_data=self.REDIS_CONNECTOR.cluster_data(self,current_update["cluster"])
+            if type(update_notification) != dict:
+                time.sleep(1)
+                continue
+
+            print("*$" * 100)
+            print(update_notification)
+            updated_resource_data = self.REDIS_CONNECTOR.get_updated_resource_data(
+                update_notification
+            )
+
+            # cleaned_data=self.CLEANER_OBJECTS[current_update["resouce_type"]](current_update_data)
+            #
+            # update_status=self.REDIS_CONNECTOR.update_node_data(cleaned_data,current_update)
+            # if not update_status:
+            #     pass
+
+            # self.REDIS_CONNECTOR.get_cluster_data(update_notification["cluster"])
             ## Later will decide what to do with this data.
             ## Graph servic would handle any additional tasks.
-      
+
 
 if __name__ == "__main__":
     print("Starting all watchers with concurrency")
 
     APPLICATION = APP()
-    APPLICATION.run_threaded()
+    APPLICATION.run()

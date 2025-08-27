@@ -1,5 +1,3 @@
-from ast import Dict
-from turtle import update
 import redis
 import os
 import json
@@ -21,8 +19,8 @@ class REDIS_CONNECTOR:
             host="redis",
             port=6379,
             db=0,
-            username=os.getenv("CLUSTER_STATE_REDIS_CRED_USER"),
-            password=os.getenv("CLUSTER_STATE_REDIS_CRED_PASSWD"),
+            username=os.getenv("NODE_DATA_REDIS_CRED_USER"),
+            password=os.getenv("NODE_DATA_REDIS_CRED_PASSWD"),
             max_connections=250,
             decode_responses=True,
             retry=self.RETRY,
@@ -44,27 +42,22 @@ class REDIS_CONNECTOR:
                 f"CLUSTER_DATA:{cluster}", f"$.{resource_type}", {}
             )
 
-    def update_node_data(
-        self, cleaned_data:Dict,current_update:Dict
-    ) -> bool | None:
-        pass
-    
-    def cluster_data(
-        self,cluster:str
-    )->Dict | None:
+    def update_node_data(self, cleaned_data: dict, current_update: dict) -> bool | None:
+        # ...
+        # ...
+        # ...
+        self.CONNECTION.lpop("CLUSTER_DATA:UPDATES_QUEUE")
         pass
 
-    def get_update(
-        self
-    )-> Dict| None:
-        
-        update_items=self.CONNECTION.lrange("CLUSTER_DATA:UPDATES_QUEUE",0,0)
-        if update_items==[]:
+    def get_cluster_data(self, cluster: str) -> dict | None:
+        pass
+
+    def get_update_notification(self) -> dict | None:
+        update_items = self.CONNECTION.lrange("CLUSTER_DATA:UPDATES_QUEUE", 0, 0)
+
+        if update_items == []:
             return
         return json.loads(update_items[0])
-        
 
-    def get_update_data(
-        self,update_notification:Dict
-    )-> Dict | None:
+    def get_updated_resource_data(self, update_notification: dict) -> dict | None:
         pass
