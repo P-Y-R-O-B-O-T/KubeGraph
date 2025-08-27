@@ -1,3 +1,4 @@
+from ast import Dict
 import redis
 import os
 from redis.backoff import ExponentialBackoff
@@ -41,7 +42,22 @@ class REDIS_CONNECTOR:
                 f"CLUSTER_DATA:{cluster}", f"$.{resource_type}", {}
             )
 
-    def update_resource(
-        self, cluster: str, resource_type: str, data: dict
-    ) -> str | None:
+    def update_node_data(
+        self, cleaned_data:Dict,current_update:Dict
+    ) -> bool | None:
+        pass
+    
+    def cluster_data(
+        self,cluster:str
+    )->Dict | None:
+        pass
+
+    def get_update(
+        self
+    )-> Dict| None:
+        pass
+    
+    def get_update_data(
+        self,update_notification:Dict
+    )-> Dict | None:
         pass
