@@ -240,7 +240,7 @@ export default function HomePage() {
       setTerminalVisible((v) => !v)
     } else {
       setActiveSection(id)
-      setTerminalVisible(false)
+      // setTerminalVisible(false)
     }
   }
 
